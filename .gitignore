@@ -1,10 +1,11 @@
 # 隐私与数据安全
+private_assignments/
+user_data/
 profiles/private/
 *.raw.csv
 *.raw.xlsx
 *.raw.json
-# 真实作业原件
-*homework*
-*assignment*
-!templates/
-!examples/
+
+# 缓存文件
+__pycache__/
+*.py[cod]

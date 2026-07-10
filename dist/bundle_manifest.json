@@ -1,1 +1,18 @@
-{"bundle": "GPAO.bundle.md", "sha256": "71c5d8344fd5e960dbe4f00ede3c89d0ea3a76534aaf97eb570dcc07af463b39", "commit": "3b8995d"}
+{
+  "bundle": "GPAO.bundle.md",
+  "sha256": "59aacc37fe22ed3837379b3f6be581302e0728cc754eb110b1d86027b0a6319f",
+  "commit": "e70f0c4",
+  "sources": {
+    "SKILL.md": "839dd716298d33a1bd0a0246eff3581cc729c3cf14007a5b71e821931395fd02",
+    "workflows/plan_assignment.md": "bc86d4a8e6bc1ca2905f181761e60604e7947706b30ad90ee827d6e804cc2e79",
+    "workflows/simulate_grading.md": "28c689710c288c8ea9f80a163741c1711c25746d093668cbf2468f50367a31df",
+    "workflows/postmortem.md": "d8dabd3ac358216b6a96f557b90b945c5628e3baa1e921fbd19f394c60cac440",
+    "templates/assignment_intake.md": "38935cea3dda44119e17332652aaeace2c7aef4e8b30d7f927525bb65f5afba0",
+    "templates/rubric_visibility_matrix.md": "a15b48ebac4cf7bf43d824b40ca4d01850c292079456293c23dc9253189e0745",
+    "templates/teacher_evidence_ledger.md": "ee1a22cff4088195e2f5c43572486111661599354e4e41bab33caff137c8b8d0",
+    "profiles/teacher_profile_template.md": "56db6207bec83e7be05f12b8a6517cd9a7ffb90c5df159f2bf798d1f2ef348e8",
+    "adapters/empirical_paper.md": "08ecac42920fd01f4c1496fa6791af4e0bd70d6e8d8f1d8d47778010a6a3fb16",
+    "adapters/programming_project.md": "acfedfa4a57e28dff4f1087f2c1df585acca18eddc6e178b018c0fb57d28a09c",
+    "adapters/experiment_report.md": "ea8e09ee4ff6384610fffde9fe82d50310b9f824b94e65c48c0a18517b9601d1"
+  }
+}

@@ -1,0 +1,32 @@
+name: GPAO CI
+
+on:
+  push:
+    branches: [ "main", "hotfix/*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Run CI Checker
+      run: python tools/ci_checker.py
+
+    - name: Run Unit Tests
+      run: python -m unittest discover tests
+
+    - name: Check Bundle Freshness
+      run: |
+        python tools/build_bundle.py
+        if ! git diff --exit-code dist/; then
+          echo "Error: Bundle is outdated! Please run tools/build_bundle.py locally and commit the changes."
+          exit 1
+        fi
