@@ -118,7 +118,7 @@ def print_report(results, file_path="测试文本"):
     print(f"{Colors.WARNING}【免责声明】本工具不用于AI文本鉴定，仅用于空洞模板词汇的筛查。{Colors.ENDC}")
     
     if not results:
-        print(f"\n{Colors.GREEN}[OK] 未检测到明显的高频模板词汇。文字质感较为自然！{Colors.ENDC}\n")
+        print(f"\n{Colors.GREEN}[OK] 未发现硬性模板词违规。{Colors.ENDC}\n")
         return True
         
     print(f"\n{Colors.WARNING}[!] 共检测到 {len(results)} 处潜在的空洞表述：{Colors.ENDC}\n")
@@ -185,7 +185,9 @@ def main():
             sys.exit(1)
             
     results = detect_template_tone(content)
-    print_report(results, file_path)
+    is_ok = print_report(results, file_path)
+    if not is_ok:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

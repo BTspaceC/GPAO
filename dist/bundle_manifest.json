@@ -1,7 +1,7 @@
 {
   "bundle": "GPAO.bundle.md",
-  "sha256": "59aacc37fe22ed3837379b3f6be581302e0728cc754eb110b1d86027b0a6319f",
-  "commit": "e70f0c4",
+  "bundle_sha256": "dcb7d5d93eb261c8209ed116879910feda1cca3e40dc31ddc0d371208cdc919e",
+  "source_set_sha256": "799991f3a2b983c8da7a6aec276447664eb1b2b671fc24e132f5d6ba9207ccb9",
   "sources": {
     "SKILL.md": "839dd716298d33a1bd0a0246eff3581cc729c3cf14007a5b71e821931395fd02",
     "workflows/plan_assignment.md": "bc86d4a8e6bc1ca2905f181761e60604e7947706b30ad90ee827d6e804cc2e79",

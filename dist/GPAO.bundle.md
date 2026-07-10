@@ -3,13 +3,18 @@
 GPAO (Grade Point Alignment Optimizer) Bundle
 本文件由 tools/build_bundle.py 自动生成。请勿手工编辑！
 如需修改，请修改源文件后重新构建。
-Source Commit: e70f0c4
+Source Set SHA-256: 799991f3a2b983c8da7a6aec276447664eb1b2b671fc24e132f5d6ba9207ccb9
 ======================================================================
 -->
 
 # GPAO Bundle (单文件分发版)
 
-<!-- SOURCE: SKILL.md -->\n\n# GPAO: Grading Preference Alignment Optimizer
+> **当前处于 Bundle Mode**。
+> 当规则要求读取某个路径时，应在本文件中查找对应的 `<!-- SOURCE: path -->` 章节，不得请求外部文件。
+
+<!-- SOURCE: SKILL.md -->
+
+# GPAO: Grading Preference Alignment Optimizer
 
 ## 一、定位
 
@@ -118,7 +123,13 @@ Source Commit: e70f0c4
 6. 不承诺规避学校检测系统
 7. 不为了增加篇幅而堆砌无意义内容
 8. 不故意加入错误来伪装人工写作
-\n\n---\n\n<!-- SOURCE: workflows/plan_assignment.md -->\n\n# 工作流：/规划 (Plan Assignment)
+
+
+---
+
+<!-- SOURCE: workflows/plan_assignment.md -->
+
+# 工作流：/规划 (Plan Assignment)
 
 ## 适用场景
 
@@ -208,7 +219,13 @@ Source Commit: e70f0c4
 - 不得在没有评分标准的情况下假装知道评分权重
 - 不得为了增加P2任务而建议使用数据条件不支持的方法
 - 不得把用户的情绪判断（如"老师就是压分"）当作事实写入规划
-\n\n---\n\n<!-- SOURCE: workflows/simulate_grading.md -->\n\n# 工作流：/审计 (Simulate Grading)
+
+
+---
+
+<!-- SOURCE: workflows/simulate_grading.md -->
+
+# 工作流：/审计 (Simulate Grading)
 
 ## 适用场景
 
@@ -336,7 +353,13 @@ Source Commit: e70f0c4
 - 不声称本次审计能承诺特定分数或确保高分
 - 不把工具的模板词检测结果解读为"AI生成概率"
 - 不编造使用者没有经历过的"真实过程"来增加学生感
-\n\n---\n\n<!-- SOURCE: workflows/postmortem.md -->\n\n# 工作流：/复盘 (Postmortem)
+
+
+---
+
+<!-- SOURCE: workflows/postmortem.md -->
+
+# 工作流：/复盘 (Postmortem)
 
 ## 适用场景
 
@@ -405,7 +428,13 @@ Source Commit: e70f0c4
 - 不把用户的情绪判断（"老师就是压分"）转化为已验证的偏好事实
 - 不编造老师没有给出的评语
 - 当老师没有给出逐项分数时，不伪装精确的逐项得分
-\n\n---\n\n<!-- SOURCE: templates/assignment_intake.md -->\n\n# 模板：作业信息采集表 (Assignment Intake)
+
+
+---
+
+<!-- SOURCE: templates/assignment_intake.md -->
+
+# 模板：作业信息采集表 (Assignment Intake)
 
 本表在拿到大作业任务书时填写。仅用于采集事实信息，不在此处进行偏好推断。
 偏好推断请使用 `teacher_evidence_ledger.md` 和 `profiles/` 中的画像模板。
@@ -461,7 +490,13 @@ Source Commit: e70f0c4
 | C级 | /6 | 6 | |
 
 当材料不完整时，后续分析必须区分：已知事实、高概率推断、低可信度猜测、无法判断。
-\n\n---\n\n<!-- SOURCE: templates/rubric_visibility_matrix.md -->\n\n# 模板：评分点与可见性追踪矩阵 (Rubric Visibility Matrix)
+
+
+---
+
+<!-- SOURCE: templates/rubric_visibility_matrix.md -->
+
+# 模板：评分点与可见性追踪矩阵 (Rubric Visibility Matrix)
 
 本矩阵用于追踪每个评分项的完成度和正文可见度。核心问题：这项工作在最终提交的PDF里，老师能从哪里看到？
 
@@ -503,7 +538,13 @@ Source Commit: e70f0c4
 - [ ] 附录是否有清晰的编号和索引，老师能否快速定位？
 - [ ] 附录中的材料能否支持正文中的结论复现？
 - [ ] 附录是否只包含与评分相关的必要证据，没有无意义的填充？
-\n\n---\n\n<!-- SOURCE: templates/teacher_evidence_ledger.md -->\n\n# 教师偏好证据账本 (Teacher Evidence Ledger)
+
+
+---
+
+<!-- SOURCE: templates/teacher_evidence_ledger.md -->
+
+# 教师偏好证据账本 (Teacher Evidence Ledger)
 `schema_version: 1`
 
 - `evidence_id`: 证据编号
@@ -522,7 +563,13 @@ Source Commit: e70f0c4
 | evidence_id | claim | level | source_id | source_type | quote | date | course | assignment | verification_status | notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | E001 | 喜欢手写公式 | HIGH | S_001 | 课堂录音 | "公式推导不要直接贴图，我希望看到你们一步步自己打出来或者手写扫描。" | 2026-05-01 | 高等数学 | 期中作业 | SUPPORTED | 无 |
-\n\n---\n\n<!-- SOURCE: profiles/teacher_profile_template.md -->\n\n# 老师画像模板 (Teacher Profile)
+
+
+---
+
+<!-- SOURCE: profiles/teacher_profile_template.md -->
+
+# 老师画像模板 (Teacher Profile)
 
 本模板用于保存某位老师的独立评分画像。与通用 SKILL 引擎分离，每位老师一份文件。
 
@@ -568,7 +615,13 @@ Source Commit: e70f0c4
 - 本画像中的偏好推断必须有证据支持，来源记录在证据账本中
 - 不同课程的同一老师可能有不同偏好，不要跨课程套用未经验证的假设
 - 画像需要随着每次作业结果持续更新
-\n\n---\n\n<!-- SOURCE: adapters/empirical_paper.md -->\n\n# 适配器：实证类论文 (Empirical Paper)
+
+
+---
+
+<!-- SOURCE: adapters/empirical_paper.md -->
+
+# 适配器：实证类论文 (Empirical Paper)
 
 ## 适用范围
 社会科学、经济学、心理学等需要收集数据、进行统计分析以验证假设的课程论文。
@@ -608,7 +661,13 @@ Source Commit: e70f0c4
 2. `analysis_code_or_log`：统计软件的输出日志（SPSS的Viewer导出、Stata的do文件或R/Python代码）
 3. `questionnaire_origin`：问卷原件（如为调查研究）
 *(在正文对应处必须标注："原始数据和分析代码详见附件")*
-\n\n---\n\n<!-- SOURCE: adapters/programming_project.md -->\n\n# 适配器：编程与系统设计项目 (Programming Project)
+
+
+---
+
+<!-- SOURCE: adapters/programming_project.md -->
+
+# 适配器：编程与系统设计项目 (Programming Project)
 
 ## 适用范围
 计算机、软件工程、信息系统等专业的课程大作业，通常要求提交可运行的代码和说明文档。
@@ -645,7 +704,13 @@ Source Commit: e70f0c4
 1. **完整源码**：清理掉 `.git`、`node_modules` 等无关大文件。
 2. **运行截图/录屏**：部分老师不愿配置环境，**必须**在文档正文中附带核心操作流程的截图，或在根目录提供一个 1-2 分钟的 MP4 演示视频。
 *(正文中必须写明："完整源码和运行指南见压缩包根目录，演示视频为 demo.mp4")*
-\n\n---\n\n<!-- SOURCE: adapters/experiment_report.md -->\n\n# 适配器：实验报告 (Experiment Report)
+
+
+---
+
+<!-- SOURCE: adapters/experiment_report.md -->
+
+# 适配器：实验报告 (Experiment Report)
 
 ## 适用范围
 物理、化学、生物、工程材料等理工科课程，强调现象观察、数据记录和误差分析。
@@ -680,4 +745,7 @@ Source Commit: e70f0c4
 1. **原始数据记录单**：实验课上老师签字的原始草稿扫描件或照片（最强真实性证据）。
 2. **数据处理代码或表格**：如果使用了 MATLAB/Python/Excel 处理数据，附上对应文件。
 *(正文中应声明："图表计算基于真实原始数据，签字版原始记录单见附件 A")*
-\n\n---\n\n
+
+
+---
+
