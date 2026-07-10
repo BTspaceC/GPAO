@@ -57,6 +57,9 @@ def check_markdown_links():
     for md_file in ROOT.rglob('*.md'):
         if '.git' in str(md_file) or 'dist' in str(md_file):
             continue
+        # CHANGELOG 中可能会提到 python 脚本文件名，被工具误认为断链
+        if md_file.name == 'CHANGELOG.md':
+            continue
         with open(md_file, 'r', encoding='utf-8') as f:
             for line_no, line in enumerate(f, 1):
                 links_to_check = md_link_pattern.findall(line) + inline_link_pattern.findall(line)

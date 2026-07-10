@@ -2,6 +2,12 @@
 
 ## V2.0 (2026-07-10)
 
+### V2.0.0-RC3.2 Draft Release 质量精加工 (2026-07-10)
+- **对齐案例身份**：将听觉疲劳案例完全确立为“出分后复盘”，拆分 `F_DATA_02` 的删卷事实和原因，消除 `input_summary.md` 与衍生文件中的矛盾。
+- **强制 ID 与事实拦截**：`test_policy_consistency.py` 增强，新增“任何评价行必须附带有效 ID 引用或 `[INFERENCE]`”的强约束；拦截在无来源情况下对阈值及显著性的主观臆断。
+- **Bundle 本体验证**：`test_bundle_build.py` 在解析 Manifest 外，增加对物理存在的 `dist/GPAO.bundle.md` 文件的实际 `SHA-256` 匹配断言。
+- **降级版本宣告**：从自封的 Stable 降级为 Draft Release，在文档中确立以远端 Required CI Checks 绿灯为正式版唯一基准的严密原则。
+
 ### V2.0.0-RC3.1 精确发布门禁修复 (2026-07-10)
 - **彻底清除硬编码权重**：删除了三个核心适配器表格中的具体百分比，消除了“明面禁止暗地保留”的自相矛盾。
 - **建立案例唯一事实源**：新增 `examples/hearing_fatigue_case/case_facts.md`，清理了诊断矩阵和策略文件中的未确认造数残留，统一采用占位符。

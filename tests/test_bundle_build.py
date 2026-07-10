@@ -35,11 +35,21 @@ class TestBundleBuild(unittest.TestCase):
             "The existing bundle is outdated! Source files have changed. Please run tools/build_bundle.py before committing."
         )
         
-        # 3. 对比 bundle_sha256 是否一致
+        # 3. 对比 bundle_sha256 是否与构建器预期一致
         self.assertEqual(
             current_manifest.get('bundle_sha256'),
             manifest_data['bundle_sha256'],
             "The existing bundle hash mismatch! Bundle determinism broke."
+        )
+        
+        # 3.5 校验当前物理存在的 Bundle 文件的真实哈希，防止人为破坏文件但不改 Manifest
+        with open(bundle_path, 'r', encoding='utf-8') as bf:
+            actual_bundle_content = bf.read()
+        actual_bundle_sha = hashlib.sha256(actual_bundle_content.encode('utf-8')).hexdigest()
+        self.assertEqual(
+            actual_bundle_sha, 
+            current_manifest.get('bundle_sha256'),
+            "The actual GPAO.bundle.md file has been tampered with or does not match its manifest hash!"
         )
         
         # 4. 测试临时写盘
