@@ -1,66 +1,41 @@
-# GPAO: 教师偏好导向型课程大作业优化器
+# GPAO (Grade Point Alignment Optimizer)
 
-## 这是什么
+这是一套帮助大学生在课程大作业中**将高价值工作展示在老师最容易看到的位置**的工作流系统。
 
-一套帮助大学生在课程大作业中**将高价值工作展示在老师最容易看到的位置**的工作流系统。
-
-它不是论文生成器，不是AI代写工具，也不是检测对抗方案。它解决的核心问题是：你做了很多，但老师快速阅卷时没有看到。
+它不是论文生成器，不是 AI 代写工具，也没有所谓的“去 AI 味”伪装功能。它解决的核心问题是：缓解“评分可见性不足”——即你花了大量精力做的数据清洗、代码复现等工作，在老师快速翻阅阅卷时被忽略。
 
 ## 适用范围
 
-- 课程论文、问卷调查报告
-- 数据分析报告
-- 编程/系统设计项目
-- 实验报告
-- 案例分析
-- PPT答辩与课程展示
+目前内置了针对以下作业类型的差异化适配：
+- 实证论文 (Empirical Paper)
+- 编程项目 (Programming Project)
+- 实验报告 (Experiment Report)
 
 ## 目录结构
 
-```
-SKILL.md              → Agent执行规则（系统提示词）
-README.md             → 本文件（用户说明）
-CHANGELOG.md          → 版本变更记录
-
-workflows/            → 各指令的工作流定义与输入输出契约
-templates/            → 可填写的标准化模板
-checklists/           → 分级审查清单
-adapters/             → 不同作业类型的适配器
-profiles/             → 独立的老师画像存储
-examples/             → 实战案例
-tools/                → 本地辅助脚本
-tests/                → 验收测试用例
-```
-
-## 功能状态
-
-| 模块 | 名称 | 状态 |
-| :--- | :--- | :---: |
-| workflows | plan_assignment (/规划) | stable |
-| workflows | simulate_grading (/审计) | stable |
-| workflows | postmortem (/复盘) | stable |
-| workflows | diagnose (/诊断) | planned |
-| workflows | profile_teacher (/画像) | planned |
-| workflows | revise_assignment (/修改) | planned |
-| adapters | empirical_paper | planned |
-| adapters | programming_project | planned |
-| adapters | experiment_report | planned |
-| adapters | data_analysis | planned |
-| adapters | case_study | planned |
-| adapters | presentation | planned |
-| tools | student_voice_auditor.py | planned |
+- `SKILL.md`：核心工作流执行规则（可作为 AI 助手的系统提示词）。
+- `GOVERNANCE.md`：工程执行纪律（备份与确认约束）。
+- `workflows/`：各阶段（规划、审计、复盘）的标准工作流契约。
+- `adapters/`：各类作业的差异化处理与边界条件。
+- `templates/`：标准化数据采集与资产沉淀表（作业信息采集表、画像表等）。
+- `profiles/`：教师偏好画像存储。
+- `tools/`：配套本地脚本（如学生语言表述审计辅助工具）。
+- `tests/` & `test_runs/` & `examples/`：行为验收测试用例与案例。
 
 ## 使用方法
 
-1. 将 `SKILL.md` 提供给 AI 助手作为系统规则
-2. 填写 `templates/assignment_intake.md` 提交任务信息
-3. 使用指令启动工作流：`/规划`、`/审计`、`/复盘`
-4. 提交前依次通过 `checklists/` 中的三级审查
+将 `SKILL.md` 作为系统提示词加载后，本系统提供三个核心指令：
 
-## 局限性
+1. **`/规划`** (Plan)
+   根据任务书和已知的教师画像，拆解 P0-P3 任务，确保把时间投入到高收益项上，协助你放弃部分低收益的修饰工作。
+2. **`/审计`** (Simulate Grading)
+   完稿后进行“3分钟扫视”和“可见性诊断”，通过排版、索引等手段将隐性工作量显性化，并进行基础规范审查。
+3. **`/复盘`** (Postmortem)
+   成绩发布后，复盘之前的策略，提取被证实或证伪的证据，更新教师偏好画像，为未来的大作业提供参考。
 
-- 不能消除老师的主观评分因素
-- 不能承诺特定分数或确保高分
-- 不能鉴定文本是否由AI生成
-- 老师偏好推断依赖证据质量，证据不足时存在不确定性
-- 不同学校和课程的格式要求差异较大，需要使用者根据实际情况调整
+## 局限性与免责声明
+
+- 本工具**不能**承诺特定分数或确保高分。
+- 本工具**不提供** AI 文本鉴定功能，相关检查仅用于高频模板词汇的筛查。
+- 教师偏好推断依赖于积累的证据质量，信息不足时推断存在高度不确定性。
+- 不同学校和课程的具体格式、学术要求差异极大，请务必以本校真实要求为准。
