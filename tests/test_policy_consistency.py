@@ -87,8 +87,8 @@ class TestPolicyConsistency(unittest.TestCase):
             lines = file_path.read_text(encoding='utf-8').split('\n')
             for i, line in enumerate(lines):
                 line = line.strip()
-                # 过滤空行、标题、Markdown 语法行、强调线
-                if not line or line.startswith('#') or '---' in line or line.startswith('*') or line.startswith('-') or line.startswith('1.') or line.startswith('2.') or line.startswith('3.'):
+                # 过滤空行、标题、强调线
+                if not line or line.startswith('#') or '---' in line:
                     continue
                 # 过滤表格头部的格式
                 if '|' in line and ('ID' in line or '评分项目' in line):
@@ -99,9 +99,9 @@ class TestPolicyConsistency(unittest.TestCase):
                 has_id = bool(ID_PATTERN.search(line))
                 is_inference = '[INFERENCE]' in line
                 is_recommendation = '[RECOMMENDATION]' in line
-                is_template = '[TEMPLATE]' in line or line.startswith('>') 
+                is_template = '[TEMPLATE]' in line
                 
-                # 特殊场景短句放行，比如“行动计划：”等目录性质词语，但要求非常严格
+                # 特殊场景短句放行，保留目录性质词语和特殊结构标记
                 is_structural = (
                     line in ['**现状问题**：', '**行动计划**：', '**收益**：'] or
                     line.startswith('**行动计划**') or 
@@ -112,7 +112,9 @@ class TestPolicyConsistency(unittest.TestCase):
                     line.startswith('经过复盘与诊断，我们制定以下具体修改策略') or
                     line.startswith('`schema_version') or
                     line.startswith('**声明：') or
-                    line.startswith('*执行上述四步后')
+                    line.startswith('*若现有问卷') or
+                    line.startswith('*具体修改建议见') or
+                    line.startswith('- **若')
                 )
                 
                 if not (has_id or is_inference or is_recommendation or is_template or is_structural):
@@ -149,11 +151,12 @@ class TestPolicyConsistency(unittest.TestCase):
                         item_name = cols[1]
                         weight_str = cols[2].replace('%', '').strip()
                         
-                        # 如果确实是一个打分项
-                        if item_name in doc_weights:
-                            expected_weight = doc_weights[item_name]
-                            self.assertEqual(weight_str, expected_weight, 
-                                f"Weight mismatch in {file_name}: '{item_name}' should be {expected_weight}%, but found {weight_str}%")
+                        # 只要出现了带百分比的项，它的名称就必须在映射表中，防止造假新的评分项
+                        self.assertIn(item_name, doc_weights, f"Fabricated scoring item found: '{item_name}' is not defined in case_facts.md")
+                        
+                        expected_weight = doc_weights[item_name]
+                        self.assertEqual(weight_str, expected_weight, 
+                            f"Weight mismatch in {file_name}: '{item_name}' should be {expected_weight}%, but found {weight_str}%")
 
 if __name__ == '__main__':
     unittest.main()
