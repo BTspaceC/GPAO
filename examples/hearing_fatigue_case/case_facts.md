@@ -18,6 +18,11 @@
 | F_DOC_04 | 结论建议占比 15%。 | SUPPORTED | - | 任务书评分标准 |
 | F_SCORE_01| 最终作业得分为 80 分。 | SUPPORTED | - | 成绩发布结果 |
 | F_FEEDBACK_01| 老师评价：“问卷设计基本合理，但数据分析仅停留在表面。没有深入挖掘变量之间的相关关系。附录截图过于冗长且无意义。” | SUPPORTED | - | 老师评语 |
+| F_SUBMISSION_01| 正文包含男女比例等描述性统计。 | SUPPORTED | - | 原作提取 |
+| F_SUBMISSION_02| 正文包含若干饼图。 | SUPPORTED | - | 原作提取 |
+| F_SUBMISSION_03| 附录包含几十页 SPSS 截图。 | SUPPORTED | - | 原作提取 |
+| F_SUBMISSION_04| 正文未引用附录中的具体表格。 | SUPPORTED | - | 原作提取 |
+| F_SUBMISSION_05| 正文提出“长时间佩戴容易导致疲劳”。 | SUPPORTED | - | 原作提取 |
 
 ## 教师偏好记录 (Teacher Preferences)
 

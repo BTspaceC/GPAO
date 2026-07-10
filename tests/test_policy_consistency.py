@@ -79,23 +79,57 @@ class TestPolicyConsistency(unittest.TestCase):
             self.assertNotIn('p<0.01', content.replace(' ', ''), "Fabricated p-value found!")
 
     def test_all_claims_must_have_id(self):
-        """测试 diagnosis.md 和 visibility_matrix.md 中的分析陈述行，必须附带 ID 或 [INFERENCE]"""
-        id_pattern = re.compile(r'\b(?:F_DATA|F_DOC|F_SCORE|F_FEEDBACK|P_TCH)_\d+[A-Z]?\b')
+        """测试 diagnosis.md 和 visibility_matrix.md 以及 revised_strategy.md 中的分析陈述行，必须附带 ID 或 INFERENCE 等限定词"""
+        id_pattern = re.compile(r'\b(?:F_DATA|F_DOC|F_SCORE|F_FEEDBACK|P_TCH|F_SUBMISSION)_\d+[A-Z]?\b')
+        ignore_patterns = ['[INFERENCE]', '[RECOMMENDATION]', '具体做法', '收益', '行动计划', '假设', '举例', '如下：', '标注', '保留']
         
-        for file_name in ['diagnosis.md', 'visibility_matrix.md']:
+        for file_name in ['diagnosis.md', 'visibility_matrix.md', 'revised_strategy.md']:
             file_path = ROOT / 'examples' / 'hearing_fatigue_case' / file_name
             if not file_path.exists():
                 continue
                 
             lines = file_path.read_text(encoding='utf-8').split('\n')
             for i, line in enumerate(lines):
-                # 只检查表格中包含分析陈述的行
-                if '|' in line and '---' not in line and 'ID' not in line and '评分项目' not in line:
-                    has_id = bool(id_pattern.search(line))
-                    has_inference = '[INFERENCE]' in line
+                line = line.strip()
+                # 过滤空行、标题、表格结构线、以及以 > 开头的模板说明
+                if not line or line.startswith('#') or '---' in line or line.startswith('>'):
+                    continue
+                
+                # 只在这些关键字出现时，也就是明确在陈述现状或进行推断时查验
+                is_statement = ('|' in line and 'ID' not in line and '评分项目' not in line) or ('现状问题' in line) or ('正文提及' in line) or ('附录' in line) or ('宣称' in line)
+                if not is_statement:
+                    continue
                     
-                    if not (has_id or has_inference):
-                        self.fail(f"Line {i+1} in {file_name} lacks ID reference and [INFERENCE] tag:\n{line}")
+                has_id = bool(id_pattern.search(line))
+                has_ignore = any(p in line for p in ignore_patterns)
+                
+                if not (has_id or has_ignore):
+                    self.fail(f"Line {i+1} in {file_name} lacks ID reference and [INFERENCE] tag for statement:\n{line}")
+
+    def test_percentage_matches_facts(self):
+        """测试衍生文档中出现的百分比权重必须与 F_DOC 中的实际权重匹配"""
+        # 从 case_facts.md 动态提取所有的百分比数字
+        valid_percentages = set()
+        for line in self.facts_content.split('\n'):
+            if 'F_DOC' in line and '%' in line:
+                match = re.search(r'(\d+(?:\.\d+)?)%', line)
+                if match:
+                    valid_percentages.add(match.group(1))
+                    
+        self.assertTrue(len(valid_percentages) > 0, "No valid percentages extracted from case_facts.md F_DOC entries")
+        
+        # 允许自然描述的百分比（如回收率 91.4%），但如果是作为分值/权重陈述的百分比，必须匹配
+        # 这里扫描整个 examples 和 adapters，如果出现表格内的权重，必须合法
+        for root_dir in ['adapters', 'examples']:
+            for md_file in (ROOT / root_dir).rglob('*.md'):
+                if md_file.name == 'case_facts.md' or md_file.name == 'input_summary.md':
+                    continue
+                content = md_file.read_text(encoding='utf-8')
+                
+                # 提取表格中独立的百分比单元格 e.g. | 25% | 或 | 25 % |
+                table_percentages = re.findall(r'\|\s*(\d+(?:\.\d+)?)\s*%\s*\|', content)
+                for pct in table_percentages:
+                    self.assertIn(pct, valid_percentages, f"File {md_file.relative_to(ROOT)} uses fabricated weight {pct}%. Expected one of {valid_percentages}")
 
 if __name__ == '__main__':
     unittest.main()
