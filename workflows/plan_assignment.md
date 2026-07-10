@@ -10,7 +10,7 @@
 2. 评分标准（A级必须）
 3. 课程名称和作业类型（A级必须）
 4. 当前已有成果（如有）
-5. 老师偏好证据（如有，来自 `templates/teacher_evidence_ledger.md`）
+5. 老师偏好证据（如有，来自 `../templates/teacher_evidence_ledger.md`）
 
 缺少评分标准时：标注"评分标准未提供，以下分析基于通用学术规范推断，存在较大不确定性"。
 
@@ -20,10 +20,10 @@
 列出任务书中所有明确要求，逐条标注是否已满足。
 
 ### 2. 评分点矩阵
-按 `templates/rubric_visibility_matrix.md` 格式，建立每个评分项的证据与可见性追踪。
+按 `../templates/rubric_visibility_matrix.md` 格式，建立每个评分项的证据与可见性追踪。
 
 ### 3. 老师偏好假设（如有证据）
-引用 `templates/teacher_evidence_ledger.md` 中的记录，标注可信度。没有证据时不得编造偏好。
+引用 `../templates/teacher_evidence_ledger.md` 中的记录，标注可信度。没有证据时不得编造偏好。
 
 ### 4. 任务优先级
 按以下分级：

@@ -19,7 +19,7 @@
 
 ## 偏好类型判断
 
-根据 `templates/teacher_evidence_ledger.md` 中积累的证据，标注老师可能属于的类型。
+根据 `../../templates/teacher_evidence_ledger.md` 中积累的证据，标注老师可能属于的类型。
 
 | 类型 | 是否适用 | 判断依据 | 可信度 | 验证状态 |
 | :--- | :---: | :--- | :---: | :---: |

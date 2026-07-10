@@ -1,7 +1,7 @@
 # 模板：作业信息采集表 (Assignment Intake)
 
 本表在拿到大作业任务书时填写。仅用于采集事实信息，不在此处进行偏好推断。
-偏好推断请使用 `templates/teacher_evidence_ledger.md` 和 `profiles/` 中的画像模板。
+偏好推断请使用 `teacher_evidence_ledger.md` 和 `profiles/` 中的画像模板。
 
 ## A级材料（必须获取）
 
