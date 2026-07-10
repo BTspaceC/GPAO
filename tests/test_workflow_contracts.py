@@ -1,0 +1,31 @@
+import unittest
+import os
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent.resolve()
+
+class TestWorkflowContracts(unittest.TestCase):
+    def test_all_workflows_load_adapters(self):
+        """测试所有核心工作流是否都包含适配器加载指令"""
+        workflows = ['plan_assignment.md', 'simulate_grading.md', 'postmortem.md']
+        for wf in workflows:
+            wf_path = ROOT / 'workflows' / wf
+            content = wf_path.read_text(encoding='utf-8')
+            self.assertIn('加载适配器', content, f"Workflow {wf} is missing adapter loading contract.")
+            self.assertIn('当前作业类型', content, f"Workflow {wf} is missing assignment type identification.")
+
+    def test_deterministic_p0_p3_matrix(self):
+        """测试规划工作流中是否包含硬性的 P0-P3 决策矩阵"""
+        plan_content = (ROOT / 'workflows' / 'plan_assignment.md').read_text(encoding='utf-8')
+        self.assertIn('满足任一条件（硬性提交要求未满足', plan_content, "Missing deterministic P0 rule.")
+        self.assertIn('人工覆盖决策表时必须说明覆盖原因', plan_content, "Missing manual override requirement.")
+
+    def test_postmortem_objectivity(self):
+        """测试复盘准则是否已去主观化"""
+        post_content = (ROOT / 'workflows' / 'postmortem.md').read_text(encoding='utf-8')
+        self.assertIn('最终得分与现有证据是否一致', post_content, "Missing objective criteria in postmortem.")
+        self.assertNotIn('得分是否合理', post_content, "Should not use subjective 'reasonable' check.")
+
+if __name__ == '__main__':
+    unittest.main()

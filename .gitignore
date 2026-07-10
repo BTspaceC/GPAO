@@ -1,0 +1,10 @@
+# 隐私与数据安全
+profiles/private/
+*.raw.csv
+*.raw.xlsx
+*.raw.json
+# 真实作业原件
+*homework*
+*assignment*
+!templates/
+!examples/
