@@ -26,12 +26,12 @@
 
 ## 教师偏好记录 (Teacher Preferences)
 
-| ID | 偏好内容 (Preference) | 证据等级 (Level) | 验证状态 (Verification) | 来源与备注 |
-| :--- | :--- | :---: | :---: | :--- |
-| P_TCH_01 | 强调图表规范性和正文引用。 | HIGH | SUPPORTED | 课堂多次公开强调 |
-| P_TCH_02 | 厌恶无意义凑字数的附录。 | HIGH | SUPPORTED | 往届低分案例评语 |
+| ID | 偏好内容 (Preference) | Authority | Verification | Confidence | Course Scope | Transfer State | 来源与备注 |
+| :--- | :--- | :---: | :---: | :---: | :--- | :---: | :--- |
+| P_TCH_01 | 在当前课程中强调图表规范性和正文引用。 | direct_feedback | supported | high | 当前课程 | false | 课堂多次公开强调 |
+| P_TCH_02 | 在当前课程中可能不认可无意义堆叠附录。 | observed | supported | medium | 当前课程 | false | 往届低分案例评语；尚不能跨课程迁移 |
 
 ## 规范与推断原则
 1. **强制引用**: 任何诊断、矩阵等衍生文档在陈述客观情况时，必须带上出处（如 `(参考 ID: F_DATA_01)`）。
-2. **禁止过度推断**: 将 `UNVERIFIED` 或 `INSUFFICIENT_DATA` 伪装成事实是严重违规。
+2. **禁止过度推断**: 将 `UNVERIFIED` 或 `INSUFFICIENT_DATA` 伪装成事实是严重违规；高 `confidence` 不等于来源权威或跨课程确认。
 3. **主观推断标记**: 文档中自行衍生的主观判断，必须明确标记为 `[INFERENCE]`。

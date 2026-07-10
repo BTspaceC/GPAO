@@ -31,6 +31,7 @@ BUNDLE_ORDER = [
     'adapters/empirical_paper.md',
     'adapters/programming_project.md',
     'adapters/experiment_report.md',
+    'adapters/general.md',
 ]
 
 def render_bundle():

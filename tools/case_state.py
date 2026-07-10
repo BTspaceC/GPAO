@@ -154,3 +154,31 @@ def preference_transfer_state(evidence: list[dict], *, explicitly_confirmed: boo
     if candidate:
         return "candidate"
     return "false"
+
+
+def transition_authorization(
+    current: str,
+    target: str,
+    *,
+    explicit_user_approval: bool = False,
+    write_succeeded: bool = False,
+    reaudit_completed: bool = False,
+) -> str:
+    """执行唯一允许的授权转换；复审完成后回到安全的预览态。"""
+    if current not in AUTHORIZATION_STATES or target not in AUTHORIZATION_STATES:
+        raise ValueError("invalid authorization state")
+    if current == target:
+        return current
+    if current == "PREVIEW_ONLY" and target == "APPLY_APPROVED":
+        if not explicit_user_approval:
+            raise PermissionError("explicit user approval is required")
+        return target
+    if current == "APPLY_APPROVED" and target == "APPLIED_AND_REAUDIT_REQUIRED":
+        if not write_succeeded:
+            raise PermissionError("successful write is required")
+        return target
+    if current == "APPLIED_AND_REAUDIT_REQUIRED" and target == "PREVIEW_ONLY":
+        if not reaudit_completed:
+            raise PermissionError("reaudit completion is required")
+        return target
+    raise PermissionError(f"forbidden authorization transition: {current} -> {target}")

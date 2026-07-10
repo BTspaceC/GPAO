@@ -26,27 +26,23 @@ class TestPolicyConsistency(unittest.TestCase):
                         f"File {md_file.relative_to(ROOT)} contains fabricated exact weights without Rubric.")
 
     def test_case_facts_structure_strictness(self):
-        """测试 case_facts.md 结构是否严格，不混用等级与状态，动态解析表头"""
+        """测试教师偏好表严格拆分 authority、verification、confidence。"""
         lines = self.facts_content.split('\n')
-        
-        current_status_idx = -1
-        current_level_idx = -1
-        
+        preference_headers = None
         for line in lines:
-            if '|' in line and 'ID' in line and 'Claim' in line:
-                headers = [h.strip() for h in line.split('|')]
-                current_status_idx = next((i for i, h in enumerate(headers) if 'Verification' in h), -1)
-                current_level_idx = next((i for i, h in enumerate(headers) if 'Level' in h), -1)
-            elif '|' in line and 'ID' in line and 'Preference' in line:
-                headers = [h.strip() for h in line.split('|')]
-                current_status_idx = next((i for i, h in enumerate(headers) if 'Verification' in h), -1)
-                current_level_idx = next((i for i, h in enumerate(headers) if 'Level' in h), -1)
-            elif '|' in line and '---' not in line and 'ID' not in line:
+            if '|' in line and 'ID' in line and 'Preference' in line:
+                preference_headers = [h.strip() for h in line.split('|')]
+                for required in ('Authority', 'Verification', 'Confidence', 'Transfer State'):
+                    self.assertIn(required, preference_headers)
+            elif preference_headers and line.startswith('| P_TCH_'):
                 columns = [col.strip() for col in line.split('|')]
-                if len(columns) > current_status_idx and current_status_idx != -1:
-                    status_col = columns[current_status_idx]
-                    if 'FACT' in status_col or 'HIGH' in status_col:
-                        self.fail(f"case_facts.md mixes evidence level into verification_status: {line}")
+                authority = columns[preference_headers.index('Authority')]
+                verification = columns[preference_headers.index('Verification')]
+                confidence = columns[preference_headers.index('Confidence')]
+                self.assertIn(authority, {'official', 'direct_feedback', 'observed', 'secondhand', 'user_hypothesis', 'unknown'})
+                self.assertIn(verification, {'verified', 'supported', 'contradicted', 'evidence_insufficient'})
+                self.assertIn(confidence, {'high', 'medium', 'low', 'unknown'})
+        self.assertIsNotNone(preference_headers)
 
     def test_derivatives_must_cite_existing_ids(self):
         """测试衍生文档引用的 ID 必须在 case_facts.md 中真实存在"""

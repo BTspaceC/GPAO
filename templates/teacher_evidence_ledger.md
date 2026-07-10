@@ -18,4 +18,4 @@
 ## 证据列表示例
 | evidence_id | claim | authority | verification | confidence | source_id | source_type | quote | date | course | assignment | notes | legacy_label |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| E001 | 本次作业要求展示公式推导过程 | direct_feedback | verified | high | S_001 | 课堂录音 | "公式推导不要直接贴图，我希望看到你们一步步自己打出来或者手写扫描。" | 2026-05-01 | 高等数学 | 期中作业 | 仅适用于当前课程，尚不能迁移 | - |
+| E001 | 在本次高等数学课程中可能重视展示推导过程 | direct_feedback | supported | medium | S_001 | 课堂录音 | "公式推导不要直接贴图，我希望看到你们一步步自己打出来或者手写扫描。" | 2026-05-01 | 高等数学 | 期中作业 | 当前课程中的一次直接反馈，不等于跨课程稳定偏好 | - |

@@ -1,22 +1,23 @@
 {
   "bundle": "GPAO.bundle.md",
-  "bundle_sha256": "26f3930d84973a5a5c8f3352a3071ccdd8bb7104762545023a3a0b9bc9c9624c",
-  "source_set_sha256": "016bda79154b76a716d2b25e31bf127165e8fab649ba1bfe2a99b9ee76a05600",
+  "bundle_sha256": "61fc42877e07ab54a7f70b81c32cfde31b3a41ad889246f924ed04a38a59db5f",
+  "source_set_sha256": "f8e9be9382b92e18f808b94f693c060b037ec60f3e32d17d5adf056b27a020db",
   "sources": {
     "SKILL.md": "eb94977d7ebca81daa97309f8a80d504b7fb527c8141f20cc3ee79f11c04b6ea",
-    "workflows/plan_assignment.md": "663872eb704e88ad51a1847cbbff029199d992f0d9a063c57428e339dc2c5e8f",
-    "workflows/simulate_grading.md": "28c689710c288c8ea9f80a163741c1711c25746d093668cbf2468f50367a31df",
-    "workflows/postmortem.md": "d8dabd3ac358216b6a96f557b90b945c5628e3baa1e921fbd19f394c60cac440",
-    "workflows/profile_teacher.md": "0b6760b822d04a45529b8739742a36695db3f6b87ad1e75086e11006ac83cdc5",
-    "workflows/modify_assignment.md": "6d022bc54849dfb77d067b3f89b2d1a8bac22afb65ef5b5dff05295e84ab3939",
-    "workflows/diagnose_assignment.md": "e0f9d3c83755c3e6d99309da7620792a71cf2ff8b417ef7aa10af935ab63c529",
+    "workflows/plan_assignment.md": "0aec501aaa1be58720a9d4dc3ac774a45502db3b7bbe0bbd3ba2717cd5dbcd33",
+    "workflows/simulate_grading.md": "fc8cdb81261f511b422ffbc318cfd56260b198b619249dcd9469bf57908c136b",
+    "workflows/postmortem.md": "b52aab18ce9653c47e647732b816c162efee49fefcc7151280715db0d3c3d3cd",
+    "workflows/profile_teacher.md": "aeec04e45fc694e59dff0113884618856368d5032828bc1f834784c6825bc759",
+    "workflows/modify_assignment.md": "b4778d2d049ad0d94116d5610f196e84473905763e7f5808c2ecf812b68ec80d",
+    "workflows/diagnose_assignment.md": "deb4580f9261e0a9c7042dd7c971f46b364cd1018cc9502d12e1cd3531979420",
     "templates/assignment_intake.md": "38935cea3dda44119e17332652aaeace2c7aef4e8b30d7f927525bb65f5afba0",
-    "templates/case_state.md": "da4a3cff466bfcfd587960db3cd674ed2800704fc39fceaa6791096dc5061a12",
-    "templates/rubric_visibility_matrix.md": "a15b48ebac4cf7bf43d824b40ca4d01850c292079456293c23dc9253189e0745",
-    "templates/teacher_evidence_ledger.md": "7f0bfbe9d5a3b9c0c5e99eaf6c4e241c02088f635cd1d6cd59b7c6e2a1f8e95b",
+    "templates/case_state.md": "b50f7aa017a284450f26de81c7d0cdd30985456c624b6a9a29290e17eeda2f22",
+    "templates/rubric_visibility_matrix.md": "503aab836074dc07adce0dd11211c8212867cc72aa1d7aee25061f96e9b30f45",
+    "templates/teacher_evidence_ledger.md": "e3b15148fdc28a433aca857806325945072a1ed71af3ec607c43e550d8a4e064",
     "templates/teacher_profile.md": "32314db640c89e56d7eecca76b8c7e808e7188f163195f241284bd6f516d47dd",
-    "adapters/empirical_paper.md": "7fb80c6726fcde8898cbf64d0ea88b9ccc21cfcadeb3be76c166419cb06ea389",
-    "adapters/programming_project.md": "dd30bde8c6648bc260bd159d8b6c0b92eaf6062a18472adfebfc5a189487fdc9",
-    "adapters/experiment_report.md": "0521075f07c3ee07388fa4f3db3c1dc31f1847790ec2cc0174af07f6eb51f444"
+    "adapters/empirical_paper.md": "7d0da66b33548a8303c18a7e6f9c764006f6458ccf58f6d1287139cf96eaaebb",
+    "adapters/programming_project.md": "8dfe9cb117ac2ce1275deac2a036542fdbfcf0031a06fb6485506edf17603d5e",
+    "adapters/experiment_report.md": "6a6eeb468a6855f99591837f266c2f6c8a4c9ae8df9891fe6f620bc919c3615c",
+    "adapters/general.md": "e67ad960b176802d3118f1cc1ca517bbed1b9ea5c218e827717d48a9b6a79f66"
   }
 }

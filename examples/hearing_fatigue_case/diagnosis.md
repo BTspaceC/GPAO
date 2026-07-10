@@ -19,10 +19,10 @@
 
 ## 3. 老师偏好验证
 
-| 偏好 ID | 之前假设 | 验证结果 (Verification) | 证据等级 (Level) |
-| :--- | :--- | :---: | :---: |
-| P_TCH_01 | 老师强调图表规范性和正文引用 | SUPPORTED | HIGH |
-| P_TCH_02 | 老师厌恶无意义凑字数的附录 | SUPPORTED | HIGH |
+| 偏好 ID | 之前假设 | Authority | Verification | Confidence | Transfer State |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| P_TCH_01 | 当前课程中强调图表规范性和正文引用 | direct_feedback | supported | high | false |
+| P_TCH_02 | 当前课程中可能不认可无意义堆叠附录 | observed | supported | medium | false |
 
 ## 4. 下次作业改进策略
 

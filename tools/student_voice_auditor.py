@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-学生表达审核工具 (Student Voice Auditor)
-----------------------------------------
+具体性与证据表达提示器（兼容文件名：Student Voice Auditor）
+----------------------------------------------------------
 【免责声明】本工具不用于AI文本鉴定，也不提供任何AI生成概率的评估。
-本工具仅用于本地快速筛查文稿中存在的“空洞模板词汇”，并提供表达提示，
-帮助作业更符合真实的学术表达规范。
+本工具仅用于本地快速提示可能空洞、绝对或缺少事实支撑的模板表达。
+命中词表不代表文本质量低，也不代表文本由 AI 生成；结果默认不阻断工作流。
 不需要联网，不消耗 API 额度，完全基于本地正则规则。
 """
 
@@ -113,12 +113,12 @@ def detect_template_tone(text):
     return results
 
 def print_report(results, file_path="测试文本"):
-    print(f"\n{Colors.HEADER}{Colors.BOLD}=== 学生表达审核报告 ==={Colors.ENDC}")
+    print(f"\n{Colors.HEADER}{Colors.BOLD}=== 具体性与证据表达提示报告 ==={Colors.ENDC}")
     print(f"{Colors.BLUE}目标文件: {file_path}{Colors.ENDC}")
     print(f"{Colors.WARNING}【免责声明】本工具不用于AI文本鉴定，仅用于空洞模板词汇的筛查。{Colors.ENDC}")
     
     if not results:
-        print(f"\n{Colors.GREEN}[OK] 未发现硬性模板词违规。{Colors.ENDC}\n")
+        print(f"\n{Colors.GREEN}[OK] 未命中当前提示词表。{Colors.ENDC}\n")
         return True
         
     print(f"\n{Colors.WARNING}[!] 共检测到 {len(results)} 处潜在的空洞表述：{Colors.ENDC}\n")
@@ -150,7 +150,7 @@ def run_test():
     print_report(results, "内置演示文本")
 
 def main():
-    parser = argparse.ArgumentParser(description="学术大作业学生表达本地审核工具")
+    parser = argparse.ArgumentParser(description="学术文本具体性与证据表达本地提示工具（非 AI 检测）")
     parser.add_argument("file", nargs="?", help="要扫描的 txt 或 md 文件路径")
     parser.add_argument("--test", action="store_true", help="运行演示测试")
     
@@ -185,9 +185,7 @@ def main():
             sys.exit(1)
             
     results = detect_template_tone(content)
-    is_ok = print_report(results, file_path)
-    if not is_ok:
-        sys.exit(1)
+    print_report(results, file_path)
 
 if __name__ == "__main__":
     main()

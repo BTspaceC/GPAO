@@ -10,6 +10,7 @@ from case_state import (
     migrate_legacy_evidence,
     new_case_state,
     preference_transfer_state,
+    transition_authorization,
     validate_case_state,
 )
 
@@ -67,6 +68,32 @@ class TestCaseState(unittest.TestCase):
             {"authority": "direct_feedback", "course": "B", "semantic_key": "three_line_table", "template_id": "COLLEGE_1"},
         ]
         self.assertEqual(preference_transfer_state(evidence), "false")
+
+    def test_authorization_state_machine(self):
+        with self.assertRaises(PermissionError):
+            transition_authorization("PREVIEW_ONLY", "APPLY_APPROVED")
+        self.assertEqual(
+            transition_authorization(
+                "PREVIEW_ONLY", "APPLY_APPROVED", explicit_user_approval=True
+            ),
+            "APPLY_APPROVED",
+        )
+        self.assertEqual(
+            transition_authorization(
+                "APPLY_APPROVED",
+                "APPLIED_AND_REAUDIT_REQUIRED",
+                write_succeeded=True,
+            ),
+            "APPLIED_AND_REAUDIT_REQUIRED",
+        )
+        self.assertEqual(
+            transition_authorization(
+                "APPLIED_AND_REAUDIT_REQUIRED",
+                "PREVIEW_ONLY",
+                reaudit_completed=True,
+            ),
+            "PREVIEW_ONLY",
+        )
 
 
 if __name__ == "__main__":
