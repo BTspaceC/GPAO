@@ -21,9 +21,12 @@ def check_utf8_and_mojibake(file_path):
     except UnicodeDecodeError:
         return False, "Failed to decode as UTF-8."
     
+    if content.startswith('\ufeff'):
+        return False, "UTF-8 BOM detected. File must be UTF-8 without BOM."
+        
     # 检测不可见 BOM 或几乎为空的情况
-    if len(content.lstrip('\ufeff').strip()) == 0:
-        return False, "File is empty or contains only whitespace/BOM."
+    if len(content.strip()) == 0:
+        return False, "File is empty or contains only whitespace."
     
     # 检测常见乱码特征
     if '\ufffd' in content:

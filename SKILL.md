@@ -80,13 +80,16 @@
 4. 按该工作流的输出契约生成结果
 
 ### /画像
-（STATUS: planned，暂未实现）
+1. 读取 `workflows/profile_teacher.md`
+2. 提取或更新特征至 `templates/teacher_profile.md`
 
 ### /修改
-（STATUS: planned，暂未实现）
+1. 读取 `workflows/modify_assignment.md`
+2. 基于 `/审计` 和 `/诊断` 结果输出差异化 Diff
 
 ### /诊断
-（STATUS: planned，暂未实现）
+1. 读取 `workflows/diagnose_assignment.md`
+2. 输出适配器定性和风险雷区
 
 ## 七、输出最低要求
 
