@@ -1,6 +1,6 @@
 # 教师画像结构模板 (Teacher Profile)
 
-`schema_version: 2.0`
+`schema_version: 3.0`
 
 **用途声明**：本模板用于结构化记录教师在评分中表现出的偏好、习惯与红线要求。禁止将单次个例、学生猜测或无事实支撑的主观判断升级为中高可信度偏好。
 
@@ -16,13 +16,13 @@
 
 ## 偏好注册表
 
-| claim_id | claim | course_scope | evidence_ids | support_count | contradiction_count | confidence_level | verification_status | last_verified_at | cross_course_transfer | transfer_reason |
-| :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :--- | :---: | :--- |
-| P_TCH_01 | 极度反感未被正文引用的附录 | 实验心理学 | F_FB_02, F_SC_04 | +3 | -0 | HIGH | 已验证 | 2026-07-10 | false | - |
-| P_TCH_02 | 偏好结构方程模型(SEM) | 社会心理学 | F_FB_05 | +1 | -0 | MEDIUM | 待更多验证 | 2026-07-10 | false | - |
-| P_TCH_03 | APA 7th 格式强制要求 | (全部课程) | F_REQ_01, F_FB_09 | +4 | -0 | FACT | 官方标准 | 2026-07-10 | true | 在多门课程的任务书中出现，属于底层学术规范 |
+| claim_id | claim | course_scope | evidence_ids | support_count | contradiction_count | authority | verification | confidence | last_verified_at | transfer_state | transfer_reason |
+| :--- | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- | :---: | :--- |
+| P_TCH_01 | 反馈中重视正文对附录的明确引用 | 实验心理学 | F_FB_02, F_SC_04 | +2 | -0 | direct_feedback | supported | high | 2026-07-10 | false | 当前只在一门课程中验证 |
 
 ### 字段硬约束说明：
 1. **evidence_ids**: 每项画像必须引用具体的证据 ID，禁止使用“根据之前交流”等模糊描述。
 2. **support_count / contradiction_count**: 必须严格由 `evidence_ids` 中的证据条目推算，禁止模型凭印象填写。
-3. **cross_course_transfer**: 默认必须设为 `false`。只有出现多门课程的重复证据后，才能标记为 `true` (候选可迁移)，且必须在 `transfer_reason` 说明理由，但这不能使其自动升级为 FACT。
+3. **transfer_state**: 默认 `false`。至少两个不同课程、两条直接证据、非同一模板重复、语义一致且无反驳时才能标记为 `candidate`；获得用户或人工明确确认后才可标记为 `confirmed`。
+4. `confidence` 只表示系统对当前主张判断正确性的把握，不代表来源权威、重要性或迁移资格。
+5. 任务书、评分表和学院模板中的正式要求属于课程约束，不得登记为教师个人偏好。

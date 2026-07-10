@@ -1,0 +1,25 @@
+{
+  "version": "V2.1.0-RC1",
+  "commit": "ba05ad5d1d46f6292754cc615b2ad81a2c8200e5",
+  "captured_at": "2026-07-11T00:00:00+08:00",
+  "tests": {
+    "unit_tests_run": 15,
+    "unit_tests_passed": 15,
+    "repository_integrity": "passed"
+  },
+  "bundle": {
+    "manifest_source_set_sha256": "5c3ff7a3fa190661ca45d849d5f37f90532d2638248889da08e15f6595d14287",
+    "manifest_bundle_sha256": "c515e78c11a9623a996eaf5263e7d0b6764b0124f06e122c6e08616c251a7f00",
+    "physical_file_sha256": "82ead2af193ec4b547abd3f121e0dde806e5904265492ad0e0c5027b760224e3"
+  },
+  "representative_outputs": [
+    "test_runs/plan_example.md",
+    "test_runs/simulate_grading_example.md",
+    "test_runs/postmortem_example.md"
+  ],
+  "limitations": [
+    "No YAML frontmatter in SKILL.md",
+    "Semantic evaluation runner did not call a model",
+    "Markdown acceptance cases were not executable tests"
+  ]
+}

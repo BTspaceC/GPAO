@@ -1,0 +1,4 @@
+interface:
+  display_name: "GPAO"
+  short_description: "基于评分标准与证据链诊断、规划、审计和修改大学课程作业"
+  default_prompt: "使用 $gpao 诊断这份课程作业，并按证据给出下一步。"

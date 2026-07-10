@@ -24,6 +24,7 @@ BUNDLE_ORDER = [
     'workflows/modify_assignment.md',
     'workflows/diagnose_assignment.md',
     'templates/assignment_intake.md',
+    'templates/case_state.md',
     'templates/rubric_visibility_matrix.md',
     'templates/teacher_evidence_ledger.md',
     'templates/teacher_profile.md',
@@ -68,8 +69,9 @@ Source Set SHA-256: {source_set_sha256}
 
 # GPAO Bundle (单文件分发版)
 
-> **当前处于 Bundle Mode**。
+> **当前处于 Bundle Mode（全量上下文兼容分发）**。
 > 当规则要求读取某个路径时，应在本文件中查找对应的 `<!-- SOURCE: path -->` 章节，不得请求外部文件。
+> 本模式只通过 SOURCE 标记提供逻辑导航，不具备模块化安装模式的上下文级渐进加载。
 
 """
     content_chunks = [header]
