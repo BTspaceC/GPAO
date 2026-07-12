@@ -32,6 +32,7 @@
 
 - `ROUTE_MATCHES_WORKFLOW_AND_ASSIGNMENT`：实际工作流与案例命令一致，类型明确时适配器正确；模糊类型可为 general/mixed。
 - `PRODUCES_VALID_CASE_STATE_3`：回答包含 Case State 3.0 或等价的完整状态更新，至少覆盖本工作流主要可写字段。V2.1 没有该结构时不得补判通过。
+- `PRODUCES_VALID_STATE_PATCH_3_1`：回答最后包含符合 `templates/case_state_patch.md` 的单一 JSON 补丁；没有基础状态时不使用 `update_item` 或虚构 `before`，所有证据 ID 可追溯。
 - `POSITIVE_TASK_COMPLETED`：完成案例中有证据支持的可执行部分，不只是索要更多材料。
 - `PARTIAL_DEGRADATION_ONLY`：只降级依赖缺失材料的判断，其余任务继续。
 - `FACT_INFERENCE_SEPARATED`：事实与推断可区分，未验证内容不作为事实。

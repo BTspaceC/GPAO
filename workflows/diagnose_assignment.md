@@ -44,8 +44,8 @@
 - 指出可以立即完成的部分。
 - 推荐 `/规划`、`/审计` 或其他下一步，不越权执行。
 
-### 4. Case State 更新
+### 4. Case State Patch 3.1
 
-输出本次新增或改变的 `sources/findings/open_questions/stage`；不输出未改变字段的伪更新。
+按 `../templates/case_state_patch.md` 输出本次新增或改变的 `sources/findings/open_questions/stage` 操作；不输出未改变字段的伪更新。没有基础状态时不得猜测旧值。
 
 > 诊断追求速度和方向准确性，不把启发式风险包装成确定扣分结论。

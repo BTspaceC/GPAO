@@ -13,7 +13,15 @@ class TestWorkflowV3Contracts(unittest.TestCase):
 
     def test_all_workflows_use_case_state(self):
         for path in (ROOT / "workflows").glob("*.md"):
-            self.assertIn("Case State", path.read_text(encoding="utf-8"), path.name)
+            content = path.read_text(encoding="utf-8")
+            self.assertIn("Case State", content, path.name)
+            self.assertIn("Patch 3.1", content, path.name)
+
+    def test_skill_requires_closed_world_patch_output(self):
+        content = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("封闭世界事实规则", content)
+        self.assertIn("case_state_patch.md", content)
+        self.assertIn("空 `operations`", content)
 
     def test_diagnosis_avoids_certain_grade_claim(self):
         content = self._read("diagnose_assignment.md")

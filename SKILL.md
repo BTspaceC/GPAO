@@ -39,6 +39,8 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 任务书、评分表和正式提交要求属于课程约束，不属于教师偏好。旧版证据标签只作为 `legacy_label` 保留；无法回到原始证据重新判断时，使用 `authority: unknown`、`verification: evidence_insufficient`、`confidence: unknown`，不得自动升级。
 
+采用封闭世界事实规则：来源只证明它明确陈述的内容。缺少某项结果不等于结果为否；“多个项目中有一个失败”不证明其余项目通过。任何未被逐项支持的互补事实保持 `unknown/evidence_insufficient`，不得靠常识补全。
+
 ## 四、冲突处理优先级
 
 当不同来源的要求发生冲突时，按以下优先级处理：
@@ -63,7 +65,9 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 ## 六、Case State 3.0
 
-开始工作流前读取 `templates/case_state.md`。六条工作流通过同一份 Case State 传递状态。新增来源必须追加；纠正旧来源时保留原记录并写明更正关系。修改非本工作流主要负责的字段时，必须在 `state_changes` 中记录字段、前后值、原因和证据 ID，禁止静默覆盖。
+开始工作流前读取 `templates/case_state.md` 和 `templates/case_state_patch.md`。六条工作流通过同一份 Case State 传递状态，但回答末尾只输出一个 Case State Patch 3.1 JSON，不自由重写完整状态。新增来源必须追加；纠正旧来源时保留原记录并写明更正关系。修改非本工作流主要负责的字段时，必须记录原因和证据 ID，禁止静默覆盖。
+
+没有基础状态时设置 `base_state_available: false`，只能追加新项目或初始化 `stage/scope`；不得输出 `update_item`，不得猜测 `before`。模块化模式可用 `python tools/case_state.py validate-patch patch.json` 验证；Bundle 模式仍遵循相同结构。
 
 教师偏好跨课程状态只能是 `false/candidate/confirmed`。进入 `candidate` 必须至少有两个不同课程中的两条直接证据，排除同一学院模板复用，语义一致且没有有效反驳；进入 `confirmed` 还需要用户或人工明确确认。
 
@@ -112,6 +116,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 3. 不编造使用者未提供的信息
 4. 修改建议按优先级排序（P0/P1/P2/P3）
 5. 明确列出材料不足和无法判断的部分
+6. 最后输出且只输出一个符合 `templates/case_state_patch.md` 的 State Patch 3.1 JSON 代码块；即使没有变化也保留空 `operations`
 
 ## 九、禁止事项
 

@@ -54,9 +54,9 @@
 
 最多列 5 项，按 P0–P3 排序。每项包含来源 ID、`authority/verification/confidence`、风险机制和最小动作。没有证据时标记无法判断。
 
-### 9. Case State 更新
+### 9. Case State Patch 3.1
 
-主要更新审计类 `claims/findings/open_questions`。分析报告保留证据维度；面向提交的正文不得带入 `[INFERENCE]` 等内部标签。
+按 `../templates/case_state_patch.md` 输出审计类 `claims/findings/open_questions` 的增量操作。分析报告保留证据维度；面向提交的正文不得带入 `[INFERENCE]` 等内部标签。
 
 ## 禁止行为
 

@@ -25,6 +25,7 @@ BUNDLE_ORDER = [
     'workflows/diagnose_assignment.md',
     'templates/assignment_intake.md',
     'templates/case_state.md',
+    'templates/case_state_patch.md',
     'templates/rubric_visibility_matrix.md',
     'templates/teacher_evidence_ledger.md',
     'templates/teacher_profile.md',

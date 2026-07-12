@@ -66,9 +66,9 @@ PREVIEW_ONLY
 
 记录因课程要求、数据条件、隐私或授权范围而未执行的修改。
 
-### 4. Case State 与复审
+### 4. Case State Patch 3.1 与复审
 
-- 主要更新 `authorization_state` 和修改类 `claims/findings`。
+- 按 `../templates/case_state_patch.md` 更新修改类 `claims/findings`；State Patch 不改变 `authorization_state`，授权只能由独立状态机根据真实用户授权和写入结果转换。
 - 预览时明确写“未写入任何文件”。
 - 应用时列出实际文件和复审结果，不得静默修改其他文件。
 

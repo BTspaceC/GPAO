@@ -48,9 +48,9 @@
 
 列出无法确认的阅卷过程、扣分归因、附件查看情况和缺失逐项分数。
 
-### 6. Case State 更新
+### 6. Case State Patch 3.1
 
-更新 `history`、相关 claim 的 `verification`、偏好迁移候选和复盘类 `findings`。跨范围修改写入 `state_changes`。
+按 `../templates/case_state_patch.md` 输出 `history`、相关 claim 的 `verification`、偏好迁移候选和复盘类 `findings` 操作。只有提供真实旧 claim 时才能使用 `update_item`；否则追加新观察或提出问题，禁止构造 `before`。
 
 ## 禁止行为
 

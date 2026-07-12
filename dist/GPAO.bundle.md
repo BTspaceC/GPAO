@@ -3,7 +3,7 @@
 GPAO (Grade Point Alignment Optimizer) Bundle
 本文件由 tools/build_bundle.py 自动生成。请勿手工编辑！
 如需修改，请修改源文件后重新构建。
-Source Set SHA-256: a8ef4d6894e1f00d181b008b9961db0b38cc6c5b119173f7397df558c4edca19
+Source Set SHA-256: 4248bcd9ddd8ef9587820d319f9d636c4467ef39e2e8fbe2d326b4e3dfd2bb1d
 ======================================================================
 -->
 
@@ -56,6 +56,8 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 任务书、评分表和正式提交要求属于课程约束，不属于教师偏好。旧版证据标签只作为 `legacy_label` 保留；无法回到原始证据重新判断时，使用 `authority: unknown`、`verification: evidence_insufficient`、`confidence: unknown`，不得自动升级。
 
+采用封闭世界事实规则：来源只证明它明确陈述的内容。缺少某项结果不等于结果为否；“多个项目中有一个失败”不证明其余项目通过。任何未被逐项支持的互补事实保持 `unknown/evidence_insufficient`，不得靠常识补全。
+
 ## 四、冲突处理优先级
 
 当不同来源的要求发生冲突时，按以下优先级处理：
@@ -80,7 +82,9 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 ## 六、Case State 3.0
 
-开始工作流前读取 `templates/case_state.md`。六条工作流通过同一份 Case State 传递状态。新增来源必须追加；纠正旧来源时保留原记录并写明更正关系。修改非本工作流主要负责的字段时，必须在 `state_changes` 中记录字段、前后值、原因和证据 ID，禁止静默覆盖。
+开始工作流前读取 `templates/case_state.md` 和 `templates/case_state_patch.md`。六条工作流通过同一份 Case State 传递状态，但回答末尾只输出一个 Case State Patch 3.1 JSON，不自由重写完整状态。新增来源必须追加；纠正旧来源时保留原记录并写明更正关系。修改非本工作流主要负责的字段时，必须记录原因和证据 ID，禁止静默覆盖。
+
+没有基础状态时设置 `base_state_available: false`，只能追加新项目或初始化 `stage/scope`；不得输出 `update_item`，不得猜测 `before`。模块化模式可用 `python tools/case_state.py validate-patch patch.json` 验证；Bundle 模式仍遵循相同结构。
 
 教师偏好跨课程状态只能是 `false/candidate/confirmed`。进入 `candidate` 必须至少有两个不同课程中的两条直接证据，排除同一学院模板复用，语义一致且没有有效反驳；进入 `confirmed` 还需要用户或人工明确确认。
 
@@ -129,6 +133,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 3. 不编造使用者未提供的信息
 4. 修改建议按优先级排序（P0/P1/P2/P3）
 5. 明确列出材料不足和无法判断的部分
+6. 最后输出且只输出一个符合 `templates/case_state_patch.md` 的 State Patch 3.1 JSON 代码块；即使没有变化也保留空 `operations`
 
 ## 九、禁止事项
 
@@ -215,9 +220,9 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 只列任务书或已确认提交规则允许的文件、格式和命名；隐私或单文件限制优先。
 
-### 8. Case State 更新
+### 8. Case State Patch 3.1
 
-输出本次新增或更新的 `rubric_items/constraints/findings/open_questions` 及必要的 `state_changes`。
+按 `../templates/case_state_patch.md` 输出 `rubric_items/constraints/findings/open_questions` 的增量操作。缺少基础状态时只用 `append`，不得编造完成度或旧字段值。
 
 ## 禁止行为
 
@@ -288,9 +293,9 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 最多列 5 项，按 P0–P3 排序。每项包含来源 ID、`authority/verification/confidence`、风险机制和最小动作。没有证据时标记无法判断。
 
-### 9. Case State 更新
+### 9. Case State Patch 3.1
 
-主要更新审计类 `claims/findings/open_questions`。分析报告保留证据维度；面向提交的正文不得带入 `[INFERENCE]` 等内部标签。
+按 `../templates/case_state_patch.md` 输出审计类 `claims/findings/open_questions` 的增量操作。分析报告保留证据维度；面向提交的正文不得带入 `[INFERENCE]` 等内部标签。
 
 ## 禁止行为
 
@@ -355,9 +360,9 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 列出无法确认的阅卷过程、扣分归因、附件查看情况和缺失逐项分数。
 
-### 6. Case State 更新
+### 6. Case State Patch 3.1
 
-更新 `history`、相关 claim 的 `verification`、偏好迁移候选和复盘类 `findings`。跨范围修改写入 `state_changes`。
+按 `../templates/case_state_patch.md` 输出 `history`、相关 claim 的 `verification`、偏好迁移候选和复盘类 `findings` 操作。只有提供真实旧 claim 时才能使用 `update_item`；否则追加新观察或提出问题，禁止构造 `before`。
 
 ## 禁止行为
 
@@ -412,9 +417,9 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 说明哪些内容属于情绪、二手猜测、模板要求、重复信息或证据不足，以及拒绝录入的原因。
 
-### 4. Case State 与存储状态
+### 4. Case State Patch 3.1 与存储状态
 
-- 只更新教师偏好命名空间下的 `claims`；跨字段修改写入 `state_changes`。
+- 按 `../templates/case_state_patch.md` 只输出教师偏好命名空间下 `claims` 的增量操作；没有旧画像时只追加，不猜测旧值。
 - 明确写“仅会话内”或用户授权的私有路径。
 - 未授权时明确写“未创建或更新本地画像文件”。
 
@@ -498,9 +503,9 @@ PREVIEW_ONLY
 
 记录因课程要求、数据条件、隐私或授权范围而未执行的修改。
 
-### 4. Case State 与复审
+### 4. Case State Patch 3.1 与复审
 
-- 主要更新 `authorization_state` 和修改类 `claims/findings`。
+- 按 `../templates/case_state_patch.md` 更新修改类 `claims/findings`；State Patch 不改变 `authorization_state`，授权只能由独立状态机根据真实用户授权和写入结果转换。
 - 预览时明确写“未写入任何文件”。
 - 应用时列出实际文件和复审结果，不得静默修改其他文件。
 
@@ -562,9 +567,9 @@ PREVIEW_ONLY
 - 指出可以立即完成的部分。
 - 推荐 `/规划`、`/审计` 或其他下一步，不越权执行。
 
-### 4. Case State 更新
+### 4. Case State Patch 3.1
 
-输出本次新增或改变的 `sources/findings/open_questions/stage`；不输出未改变字段的伪更新。
+按 `../templates/case_state_patch.md` 输出本次新增或改变的 `sources/findings/open_questions/stage` 操作；不输出未改变字段的伪更新。没有基础状态时不得猜测旧值。
 
 > 诊断追求速度和方向准确性，不把启发式风险包装成确定扣分结论。
 
@@ -639,7 +644,7 @@ PREVIEW_ONLY
 
 `schema_version: 3.0`
 
-每次执行工作流时，读取并更新同一份状态。状态可保留在当前会话；只有用户明确指定私有本地路径时才持久化。
+每次执行工作流时，读取并更新同一份状态。状态可保留在当前会话；只有用户明确指定私有本地路径时才持久化。模型回答不直接重写本结构，而按 `case_state_patch.md` 输出增量补丁，再由确定性规则验证或合并。
 
 ```yaml
 schema_version: "3.0"
@@ -707,6 +712,8 @@ scope:
   evidence_ids: ["SRC_004"]
 ```
 
+没有提供旧状态时，禁止猜测 `before`；只能追加新记录或初始化新 Case 的 `stage/scope`。
+
 ## 修改授权转换
 
 ```text
@@ -734,6 +741,63 @@ V3 RC1 可读取旧标签，但所有写出统一使用 3.0：
 2. 无法判断时设置 `unknown/evidence_insufficient/unknown`。
 3. 将原值保存在 `legacy_label`。
 4. 不因旧 `FACT` 或 `HIGH` 自动升级教师偏好。
+
+
+---
+
+<!-- SOURCE: templates/case_state_patch.md -->
+
+# Case State Patch 3.1
+
+每条工作流在回答末尾输出一个 JSON 代码块。不要重写完整 Case State；只声明本次实际变化。
+
+```json
+{
+  "schema_version": "3.1",
+  "case_id": "CASE_001",
+  "workflow": "/诊断",
+  "base_state_available": false,
+  "operations": [
+    {
+      "op": "append",
+      "field": "sources",
+      "value": {"source_id": "SRC_001", "kind": "provided_material"},
+      "reason": "用户在当前请求中提供",
+      "evidence_ids": ["SRC_001"]
+    },
+    {
+      "op": "append",
+      "field": "findings",
+      "value": {"finding_id": "F_001", "text": "缺少评分标准"},
+      "reason": "输入未包含正式 rubric",
+      "evidence_ids": ["SRC_001"]
+    }
+  ]
+}
+```
+
+## 操作
+
+- `append`：向列表字段追加一个真实存在的新项目。需要 `value`。
+- `set`：只设置 `stage/scope`。需要 `value`。授权状态只能通过独立授权状态机转换，State Patch 无权改变。
+- `update_item`：更新已有列表项目。必须有真实的基础状态，并提供 `item_id/before/updates`。
+
+所有操作都必须给出非空 `reason/evidence_ids`。没有基础状态时：
+
+- 只能追加新事实，或初始化 `stage/scope`；
+- 禁止 `update_item`；
+- 禁止虚构 `before` 值或声称旧状态已经改变；
+- 没有需要更新的字段时输出空 `operations`，不得制造伪更新。
+
+所有 `evidence_ids` 必须已经存在于基础状态的 `sources`，或由同一补丁先以 `append sources` 登记；不存在的 ID 会被验证器拒绝。
+
+模块化模式可运行：
+
+```text
+python tools/case_state.py validate-patch patch.json
+```
+
+Bundle 模式不能运行本地工具，仍必须严格输出同一 JSON 结构。
 
 
 ---

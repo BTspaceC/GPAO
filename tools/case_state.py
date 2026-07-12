@@ -5,10 +5,14 @@
 
 from __future__ import annotations
 
+import argparse
+import json
 from copy import deepcopy
 from datetime import datetime, timezone
+from pathlib import Path
 
 SCHEMA_VERSION = "3.0"
+PATCH_SCHEMA_VERSION = "3.1"
 REQUIRED_FIELDS = {
     "schema_version",
     "case_id",
@@ -36,6 +40,16 @@ AUTHORIZATION_STATES = {
     "PREVIEW_ONLY", "APPLY_APPROVED", "APPLIED_AND_REAUDIT_REQUIRED",
 }
 TRANSFER_STATES = {"false", "candidate", "confirmed"}
+PATCH_OPERATIONS = {"append", "set", "update_item"}
+LIST_FIELDS = {
+    "sources", "claims", "rubric_items", "constraints", "findings",
+    "open_questions", "history",
+}
+SCALAR_FIELDS = {"stage", "scope"}
+ITEM_ID_FIELDS = (
+    "source_id", "claim_id", "rubric_id", "constraint_id", "finding_id",
+    "question_id", "event_id",
+)
 
 FIELD_OWNERS = {
     "/诊断": {"stage", "scope", "findings", "open_questions"},
@@ -63,6 +77,177 @@ def new_case_state(case_id: str) -> dict:
         "history": [],
         "state_changes": [],
     }
+
+
+def new_state_patch(case_id: str, workflow: str, *, base_state_available: bool) -> dict:
+    """Return the only state-update envelope emitted by V3.1 workflows."""
+
+    if workflow not in FIELD_OWNERS:
+        raise ValueError(f"unknown workflow: {workflow}")
+    return {
+        "schema_version": PATCH_SCHEMA_VERSION,
+        "case_id": case_id,
+        "workflow": workflow,
+        "base_state_available": base_state_available,
+        "operations": [],
+    }
+
+
+def _is_string_list(value) -> bool:
+    return isinstance(value, list) and all(
+        isinstance(item, str) and item.strip() for item in value
+    )
+
+
+def validate_state_patch(patch: dict) -> list[str]:
+    """Validate a compact, closed-world Case State Patch 3.1 object."""
+
+    errors: list[str] = []
+    required = {
+        "schema_version", "case_id", "workflow", "base_state_available",
+        "operations",
+    }
+    missing = required - set(patch)
+    extras = set(patch) - required
+    if missing:
+        errors.append(f"missing patch fields: {', '.join(sorted(missing))}")
+    if extras:
+        errors.append(f"unexpected patch fields: {', '.join(sorted(extras))}")
+    if patch.get("schema_version") != PATCH_SCHEMA_VERSION:
+        errors.append("patch schema_version must be 3.1")
+    if not isinstance(patch.get("case_id"), str) or not patch.get("case_id", "").strip():
+        errors.append("patch case_id must be a non-empty string")
+    workflow = patch.get("workflow")
+    if workflow not in FIELD_OWNERS:
+        errors.append("patch workflow is invalid")
+    if type(patch.get("base_state_available")) is not bool:
+        errors.append("base_state_available must be a boolean")
+    operations = patch.get("operations")
+    if not isinstance(operations, list):
+        return errors + ["operations must be a list"]
+
+    for index, operation in enumerate(operations):
+        label = f"operation {index}"
+        if not isinstance(operation, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        op = operation.get("op")
+        field = operation.get("field")
+        if op not in PATCH_OPERATIONS:
+            errors.append(f"{label} has invalid op")
+            continue
+        if field not in LIST_FIELDS | SCALAR_FIELDS:
+            errors.append(f"{label} has invalid field")
+        if not isinstance(operation.get("reason"), str) or not operation.get("reason", "").strip():
+            errors.append(f"{label} requires reason")
+        if not _is_string_list(operation.get("evidence_ids")):
+            errors.append(f"{label} requires non-empty evidence_ids")
+
+        if op == "append":
+            expected = {"op", "field", "value", "reason", "evidence_ids"}
+            if field not in LIST_FIELDS:
+                errors.append(f"{label} append requires a list field")
+        elif op == "set":
+            expected = {"op", "field", "value", "reason", "evidence_ids"}
+            if field not in SCALAR_FIELDS:
+                errors.append(f"{label} set requires a scalar field")
+            if patch.get("base_state_available") is False and field not in {"stage", "scope"}:
+                errors.append(f"{label} cannot set existing state without a base state")
+        else:
+            expected = {
+                "op", "field", "item_id", "before", "updates", "reason",
+                "evidence_ids",
+            }
+            if field not in LIST_FIELDS:
+                errors.append(f"{label} update_item requires a list field")
+            if patch.get("base_state_available") is not True:
+                errors.append(f"{label} update_item requires an available base state")
+            if not isinstance(operation.get("item_id"), str) or not operation.get("item_id", "").strip():
+                errors.append(f"{label} requires item_id")
+            if not isinstance(operation.get("before"), dict) or not operation.get("before"):
+                errors.append(f"{label} requires explicit non-empty before values")
+            if not isinstance(operation.get("updates"), dict) or not operation.get("updates"):
+                errors.append(f"{label} requires non-empty updates")
+
+        missing_operation = expected - set(operation)
+        extra_operation = set(operation) - expected
+        if missing_operation:
+            errors.append(
+                f"{label} missing fields: {', '.join(sorted(missing_operation))}"
+            )
+        if extra_operation:
+            errors.append(
+                f"{label} unexpected fields: {', '.join(sorted(extra_operation))}"
+            )
+    return errors
+
+
+def _find_item(items: list, item_id: str):
+    for item in items:
+        if isinstance(item, dict) and any(item.get(key) == item_id for key in ITEM_ID_FIELDS):
+            return item
+    return None
+
+
+def apply_state_patch(state: dict, patch: dict) -> dict:
+    """Validate and apply a State Patch without inventing unavailable before-values."""
+
+    state_errors = validate_case_state(state)
+    patch_errors = validate_state_patch(patch)
+    if state_errors or patch_errors:
+        raise ValueError("; ".join(state_errors + patch_errors))
+    if state["case_id"] != patch["case_id"]:
+        raise ValueError("patch case_id does not match state")
+    if patch["base_state_available"] is False and state != new_case_state(state["case_id"]):
+        raise ValueError("base_state_available=false can only initialize a new default state")
+
+    source_ids = {
+        source.get("source_id")
+        for source in state.get("sources", [])
+        if isinstance(source, dict) and source.get("source_id")
+    }
+    source_ids.update(
+        operation["value"].get("source_id")
+        for operation in patch["operations"]
+        if operation.get("op") == "append"
+        and operation.get("field") == "sources"
+        and isinstance(operation.get("value"), dict)
+        and operation["value"].get("source_id")
+    )
+    for operation in patch["operations"]:
+        unknown_ids = set(operation["evidence_ids"]) - source_ids
+        if unknown_ids:
+            raise ValueError(f"unknown evidence_ids: {sorted(unknown_ids)}")
+
+    result = deepcopy(state)
+    workflow = patch["workflow"]
+    for operation in patch["operations"]:
+        field = operation["field"]
+        if operation["op"] == "append":
+            updated = deepcopy(result[field])
+            updated.append(deepcopy(operation["value"]))
+        elif operation["op"] == "set":
+            updated = deepcopy(operation["value"])
+        else:
+            updated = deepcopy(result[field])
+            item = _find_item(updated, operation["item_id"])
+            if item is None:
+                raise KeyError(f"item not found: {operation['item_id']}")
+            for key, expected in operation["before"].items():
+                if item.get(key) != expected:
+                    raise ValueError(
+                        f"before-value mismatch for {operation['item_id']}.{key}"
+                    )
+            item.update(deepcopy(operation["updates"]))
+        apply_state_change(
+            result,
+            workflow,
+            field,
+            updated,
+            reason=operation["reason"],
+            evidence_ids=operation["evidence_ids"],
+        )
+    return result
 
 
 def validate_case_state(state: dict) -> list[str]:
@@ -182,3 +367,35 @@ def transition_authorization(
             raise PermissionError("reaudit completion is required")
         return target
     raise PermissionError(f"forbidden authorization transition: {current} -> {target}")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    validate = subparsers.add_parser("validate-patch")
+    validate.add_argument("patch", type=Path)
+    apply_parser = subparsers.add_parser("apply-patch")
+    apply_parser.add_argument("--state", type=Path, required=True)
+    apply_parser.add_argument("--patch", type=Path, required=True)
+    apply_parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args(argv)
+
+    patch = json.loads(args.patch.read_text(encoding="utf-8"))
+    errors = validate_state_patch(patch)
+    if errors:
+        print(json.dumps({"valid": False, "errors": errors}, ensure_ascii=False))
+        return 1
+    if args.command == "validate-patch":
+        print(json.dumps({"valid": True}, ensure_ascii=False))
+        return 0
+    state = json.loads(args.state.read_text(encoding="utf-8"))
+    result = apply_state_patch(state, patch)
+    args.output.write_text(
+        json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    print(json.dumps({"valid": True, "output": str(args.output)}, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

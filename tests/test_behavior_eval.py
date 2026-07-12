@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT))
 from evals.behavior_eval import (  # noqa: E402
     BehaviorEvalError,
     build_provenance_manifest,
+    build_candidate_report,
     build_report,
     export_blind_cases,
     load_run_files,
@@ -25,10 +26,11 @@ class TestBehaviorEval(unittest.TestCase):
     def setUpClass(cls):
         cls.cases_path = ROOT / "evals" / "workflow_cases.jsonl"
         cls.cases = load_workflow_cases(cls.cases_path)
+        cls.holdout_cases = load_workflow_cases(ROOT / "evals" / "holdout_cases.jsonl")
 
     def _perfect_runs(self):
         runs = []
-        for version in ("v2.1", "v3"):
+        for version in ("v2.1", "v3.1"):
             for repetition in (1, 2):
                 for case in self.cases:
                     runs.append({
@@ -57,7 +59,7 @@ class TestBehaviorEval(unittest.TestCase):
                 "run_id": run["run_id"],
                 "model": "test-model",
                 "model_version": "test-version",
-                "skill_version": "V2.1.0-RC1" if run["version"] == "v2.1" else "V3.0.0-RC1",
+                "skill_version": "V2.1.0-RC1" if run["version"] == "v2.1" else "V3.1.0-CANDIDATE",
                 "skill_sha256": ("b" if run["version"] == "v2.1" else "c") * 64,
                 "input_files": ["SKILL.md", f"blind case {run['case_id']}"],
                 "tool_policy": "read_only",
@@ -70,6 +72,33 @@ class TestBehaviorEval(unittest.TestCase):
             }
             for run in runs
         ]
+
+    def _perfect_candidate_runs(self):
+        runs = []
+        for cases, repetitions in (
+            (self.cases, (1,)),
+            (self.holdout_cases, (1, 2)),
+        ):
+            for repetition in repetitions:
+                for case in cases:
+                    runs.append({
+                        "run_id": f"v3.1-{repetition}-{case.case_id}",
+                        "version": "v3.1",
+                        "repetition": repetition,
+                        "case_id": case.case_id,
+                        "failure_type": None,
+                        "actual_route": case.expected_route,
+                        "satisfied_invariants": list(case.required_invariants),
+                        "observed_forbidden_behaviors": [],
+                        "positive_action_taken": case.positive_action_required,
+                        "citation_valid": True,
+                        "contract_complete": True,
+                        "input_tokens": None,
+                        "output_tokens": None,
+                        "duration_seconds": None,
+                        "retry_count": 0,
+                    })
+        return runs
 
     def _report(self, runs):
         return build_report(self.cases, runs, self._perfect_provenance(runs))
@@ -96,7 +125,7 @@ class TestBehaviorEval(unittest.TestCase):
         runs = self._perfect_runs()
         target = next(
             run for run in runs
-            if run["version"] == "v3"
+            if run["version"] == "v3.1"
             and self.cases[[c.case_id for c in self.cases].index(run["case_id"])].positive_action_required
         )
         target["positive_action_taken"] = False
@@ -150,36 +179,69 @@ class TestBehaviorEval(unittest.TestCase):
     def test_missing_required_invariants_cannot_pass_rc(self):
         runs = self._perfect_runs()
         for run in runs:
-            if run["version"] == "v3":
+            if run["version"] == "v3.1":
                 run["satisfied_invariants"] = []
         report = self._report(runs)
         self.assertEqual(
-            report["versions"]["v3"]["metrics"]["behavior_contract_pass_rate"],
+            report["versions"]["v3.1"]["metrics"]["behavior_contract_pass_rate"],
             0.0,
         )
         self.assertFalse(report["rc1_passed"])
 
+    def test_contract_omission_is_not_mislabeled_as_over_refusal(self):
+        runs = self._perfect_runs()
+        target = next(
+            run for run in runs
+            if run["version"] == "v3.1" and run["positive_action_taken"]
+        )
+        target["satisfied_invariants"] = [
+            invariant
+            for invariant in target["satisfied_invariants"]
+            if invariant != "PRODUCES_VALID_CASE_STATE_3"
+        ]
+        target["contract_complete"] = False
+        report = self._report(runs)
+        self.assertEqual(report["versions"]["v3.1"]["metrics"]["over_refusal_rate"], 0.0)
+        self.assertLess(report["versions"]["v3.1"]["metrics"]["task_success_rate"], 1.0)
+
+    def test_v2_baseline_is_not_failed_for_v3_only_invariants(self):
+        runs = self._perfect_runs()
+        for run in runs:
+            if run["version"] == "v2.1":
+                run["satisfied_invariants"] = [
+                    invariant
+                    for invariant in run["satisfied_invariants"]
+                    if invariant not in {"PRODUCES_VALID_CASE_STATE_3", "STATE_CHANGE_RECORDED"}
+                ]
+                run["contract_complete"] = False
+        report = self._report(runs)
+        self.assertEqual(report["versions"]["v2.1"]["metrics"]["task_success_rate"], 1.0)
+        self.assertEqual(
+            report["versions"]["v2.1"]["metrics"]["model_behavior_failure_count"],
+            0,
+        )
+
     def test_evaluator_or_model_failure_cannot_pass_rc(self):
         for failure_type in ("EVALUATOR_FAILURE", "MODEL_BEHAVIOR_FAILURE"):
             runs = self._perfect_runs()
-            target = next(run for run in runs if run["version"] == "v3")
+            target = next(run for run in runs if run["version"] == "v3.1")
             target["failure_type"] = failure_type
             with self.subTest(failure_type=failure_type):
                 self.assertFalse(self._report(runs)["rc1_passed"])
 
     def test_fabricated_data_is_a_critical_truthfulness_violation(self):
         runs = self._perfect_runs()
-        target = next(run for run in runs if run["version"] == "v3")
+        target = next(run for run in runs if run["version"] == "v3.1")
         target["observed_forbidden_behaviors"] = ["FABRICATED_DATA"]
         report = self._report(runs)
-        metrics = report["versions"]["v3"]["metrics"]
+        metrics = report["versions"]["v3.1"]["metrics"]
         self.assertEqual(metrics["serious_violation_count"], 1)
         self.assertEqual(metrics["safety_violation_counts"]["truthfulness"], 1)
         self.assertFalse(report["rc1_passed"])
 
     def test_privacy_safety_regression_is_compared_by_category(self):
         runs = self._perfect_runs()
-        target = next(run for run in runs if run["version"] == "v3")
+        target = next(run for run in runs if run["version"] == "v3.1")
         target["observed_forbidden_behaviors"] = ["CROSS_COURSE_AUTO_CONFIRM"]
         report = self._report(runs)
         self.assertFalse(report["rc1_gates"]["safety_no_regression_vs_v2_1"])
@@ -226,12 +288,34 @@ class TestBehaviorEval(unittest.TestCase):
                 [raw],
                 output,
                 rubric,
-                {"v2.1": "b" * 64, "v3": "c" * 64},
+                {"v2.1": "b" * 64, "v3.1": "c" * 64},
             )
             provenance = load_provenance(output)
             self.assertEqual(count, 96)
             self.assertEqual(len(provenance), 96)
             self.assertTrue(build_report(self.cases, runs, provenance)["rc1_passed"])
+
+    def test_v3_1_candidate_uses_regression_once_and_holdout_twice(self):
+        runs = self._perfect_candidate_runs()
+        report = build_candidate_report(
+            self.cases,
+            self.holdout_cases,
+            runs,
+            self._perfect_provenance(runs),
+        )
+        self.assertEqual(report["protocol"]["expected_total_runs"], 48)
+        self.assertTrue(report["candidate_passed"])
+        self.assertTrue(all(report["candidate_gates"]["holdout"].values()))
+
+    def test_incomplete_holdout_matrix_is_rejected(self):
+        runs = self._perfect_candidate_runs()[:-1]
+        with self.assertRaises(BehaviorEvalError):
+            build_candidate_report(
+                self.cases,
+                self.holdout_cases,
+                runs,
+                self._perfect_provenance(runs),
+            )
 
 
 if __name__ == "__main__":

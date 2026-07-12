@@ -10,6 +10,7 @@ class TestJudgingRubric(unittest.TestCase):
         required = (
             "ROUTE_MATCHES_WORKFLOW_AND_ASSIGNMENT",
             "PRODUCES_VALID_CASE_STATE_3",
+            "PRODUCES_VALID_STATE_PATCH_3_1",
             "POSITIVE_TASK_COMPLETED",
             "PARTIAL_DEGRADATION_ONLY",
             "FACT_INFERENCE_SEPARATED",

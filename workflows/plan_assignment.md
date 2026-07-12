@@ -67,9 +67,9 @@
 
 只列任务书或已确认提交规则允许的文件、格式和命名；隐私或单文件限制优先。
 
-### 8. Case State 更新
+### 8. Case State Patch 3.1
 
-输出本次新增或更新的 `rubric_items/constraints/findings/open_questions` 及必要的 `state_changes`。
+按 `../templates/case_state_patch.md` 输出 `rubric_items/constraints/findings/open_questions` 的增量操作。缺少基础状态时只用 `append`，不得编造完成度或旧字段值。
 
 ## 禁止行为
 
