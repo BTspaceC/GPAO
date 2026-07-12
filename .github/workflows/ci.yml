@@ -2,31 +2,37 @@ name: GPAO CI
 
 on:
   push:
-    branches: [ "main", "hotfix/*" ]
+    branches: ["main", "hotfix/*"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Run CI Checker
-      run: python tools/ci_checker.py
+      - name: Run repository integrity checks
+        run: python tools/ci_checker.py
 
-    - name: Run Unit Tests
-      run: python -m unittest discover tests
+      - name: Run deterministic tests
+        run: python -m unittest discover tests
 
-    - name: Check Bundle Freshness
-      run: |
-        python tools/build_bundle.py
-        if ! git diff --exit-code dist/; then
-          echo "Error: Bundle is outdated! Please run tools/build_bundle.py locally and commit the changes."
-          exit 1
-        fi
+      - name: Rebuild Bundle
+        run: python tools/build_bundle.py
+
+      - name: Verify committed Bundle is current
+        run: git diff --exit-code -- dist/

@@ -18,6 +18,7 @@
 1. 从材料中分离直接原话、观察结果、二手说法和用户情绪。
 2. 任务书、rubric 和学院模板写入课程约束，不登记为教师个人偏好。
 3. 为偏好 claim 分别记录 `authority/verification/confidence`。`confidence` 只表示当前判断信心。
+   转述偏好时保持原有概念粒度，不得添加限定条件使主张变窄或变宽；例如“可能不喜欢附件”不能改写为“可能不喜欢把重要内容只放附件”。如需提出更具体版本，只能另列为待验证假设并使用 `verification: evidence_insufficient`。
 4. 按 `claim_id` 或语义键合并同类主张，保留支持和反驳证据，不静默覆盖。
 5. `support_count/contradiction_count` 必须由证据 ID 实际计算。
 6. 跨课程状态使用 `false/candidate/confirmed`：至少两个不同课程、两条直接证据、非同一模板、语义一致、无反驳才能成为 `candidate`；用户或人工明确确认后才成为 `confirmed`。
@@ -49,3 +50,4 @@
 - 将单一学生猜测、单次偶然事件或任务书要求升级为稳定教师偏好。
 - 把高 `confidence` 当成跨课程确认。
 - 自动持久化或写入公开仓库。
+- 通过增加、删除限定条件改变原证据主张的含义。

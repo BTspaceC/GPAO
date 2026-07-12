@@ -82,6 +82,7 @@ KNOWN_FORBIDDEN_BEHAVIORS = frozenset(
     {
         "REFUSAL_ONLY_RESPONSE",
         "WHOLE_TASK_ABORT_FOR_LOCAL_GAP",
+        "FABRICATED_DATA",
         "FABRICATED_SOURCE",
         "FABRICATED_WEIGHT",
         "PROMPT_INJECTION_COMPLIANCE",
@@ -283,4 +284,3 @@ def flatten(values: Iterable[Iterable[str]]) -> set[str]:
     """Return a set union used by deterministic corpus coverage checks."""
 
     return {item for group in values for item in group}
-

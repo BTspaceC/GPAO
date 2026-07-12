@@ -3,7 +3,7 @@
 GPAO (Grade Point Alignment Optimizer) Bundle
 本文件由 tools/build_bundle.py 自动生成。请勿手工编辑！
 如需修改，请修改源文件后重新构建。
-Source Set SHA-256: f8e9be9382b92e18f808b94f693c060b037ec60f3e32d17d5adf056b27a020db
+Source Set SHA-256: a8ef4d6894e1f00d181b008b9961db0b38cc6c5b119173f7397df558c4edca19
 ======================================================================
 -->
 
@@ -169,6 +169,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 2. 把任务书、rubric 和提交规则登记为 `constraints/rubric_items`，保留来源 ID。
 3. 把教师偏好保留在独立 claim 中，分别记录 `authority/verification/confidence`。任务要求不得改写成偏好。
 4. 生成任务优先级与最小可交付版本。只降级缺少证据的部分，不靠全面拒绝代替规划。
+   现有完成度只能从已提供的作业内容判断；未提供正文或成果时一律写“无法判断”，不得生成 `0–1/5`、百分比或其他估算值。用户要求伪造的目标数量不等于真实计划数量，例如“编造五次测量”不能被改写为“原计划五次、另三次未完成”。
 5. 主要更新 `rubric_items/constraints/findings/open_questions`；跨字段修改记录 `state_changes`。
 
 ## 输出契约
@@ -224,6 +225,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 - 建议数据条件不支持的方法。
 - 把用户情绪或二手说法当成教师事实。
 - 因局部缺失而拒绝所有可安全完成的规划。
+- 把伪造请求中的数量改写为真实计划、未完成任务或当前完成度。
 
 
 ---
@@ -316,6 +318,8 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 1. 加载对应适配器；不确定时使用 general。
 2. 区分真实质量问题、评分可见性问题、课程约束和无法归因事项。
 3. 每个归因分别记录 `authority/verification/confidence`；教师未说明的原因不得包装成事实。
+   转述教师反馈时保持原有概念粒度：例如“误差来源解释不足”不能擅自窄化成“随机误差不足”或“装置局限”。需要提出具体子类时，只能标为待验证假设，并使用 `verification: evidence_insufficient`。
+   每个数值与主张只引用能够直接支持它的最小证据集；不得为了表示“材料齐全”把无关来源并列到成绩、反馈或结论之后。若成绩只来自 S1，就只能把 S1 记为该成绩的来源。
 4. 更新 `history` 和相关 claim 的验证状态。单次结果只更新当前作用域。
 5. 仅在满足公共迁移规则时把教师偏好设为 `candidate`；`confirmed` 需要明确人工确认。
 
@@ -387,6 +391,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 1. 从材料中分离直接原话、观察结果、二手说法和用户情绪。
 2. 任务书、rubric 和学院模板写入课程约束，不登记为教师个人偏好。
 3. 为偏好 claim 分别记录 `authority/verification/confidence`。`confidence` 只表示当前判断信心。
+   转述偏好时保持原有概念粒度，不得添加限定条件使主张变窄或变宽；例如“可能不喜欢附件”不能改写为“可能不喜欢把重要内容只放附件”。如需提出更具体版本，只能另列为待验证假设并使用 `verification: evidence_insufficient`。
 4. 按 `claim_id` 或语义键合并同类主张，保留支持和反驳证据，不静默覆盖。
 5. `support_count/contradiction_count` 必须由证据 ID 实际计算。
 6. 跨课程状态使用 `false/candidate/confirmed`：至少两个不同课程、两条直接证据、非同一模板、语义一致、无反驳才能成为 `candidate`；用户或人工明确确认后才成为 `confirmed`。
@@ -418,6 +423,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 - 将单一学生猜测、单次偶然事件或任务书要求升级为稳定教师偏好。
 - 把高 `confidence` 当成跨课程确认。
 - 自动持久化或写入公开仓库。
+- 通过增加、删除限定条件改变原证据主张的含义。
 
 
 ---

@@ -1,0 +1,5 @@
+{"case_id":"TRIGGER-COURSEWORK-001","category":"explicit_coursework_help","prompt":"这是我的大学课程作业和任务书，请先诊断最可能影响得分的结构问题。","expected_trigger":true}
+{"case_id":"TRIGGER-RUBRIC-002","category":"implicit_rubric_alignment","prompt":"我做完了课程项目，但担心评分标准里的复现性和结果解释在正文里看不出来，帮我对齐一下。","expected_trigger":true}
+{"case_id":"TRIGGER-PRESUBMIT-003","category":"pre_submission_audit","prompt":"报告今晚提交，请检查硬性要求、证据引用和老师能否快速看到我完成的工作。","expected_trigger":true}
+{"case_id":"NO-TRIGGER-WRITING-004","category":"ordinary_writing","prompt":"帮我把这段旅行随笔改得更流畅、更有画面感。","expected_trigger":false}
+{"case_id":"NO-TRIGGER-CHAT-005","category":"casual_chat","prompt":"今天心情不错，你最近有什么有趣的想法？","expected_trigger":false}

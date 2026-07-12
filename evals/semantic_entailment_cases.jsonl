@@ -6,11 +6,11 @@
 {"case_id": "C_STAT_02", "group": "统计结论", "fact": "样本数据仅为 15 份，两组数据不符合正态分布。", "claim": "可以使用独立样本 T 检验来分析两组差异。", "expected_label": "CONTRADICTED"}
 {"case_id": "C_STAT_03", "group": "统计结论", "fact": "该量表由 1 个 5 级 Likert 选项组成。", "claim": "将该题项分数视为连续变量，并进行了 Pearson 相关分析。", "expected_label": "CONTRADICTED"}
 {"case_id": "C_STAT_04", "group": "统计结论", "fact": "交叉表中存在期望频数小于 5 的单元格，总样本 N=20。", "claim": "对于此分类变量关系，应当建议降级使用 Fisher 精确检验。", "expected_label": "ENTAILED"}
-{"case_id": "C_PREF_01", "group": "教师偏好", "fact": "上学期的同学说，李老师好像不太看重代码运行截图。", "claim": "已建立教师偏好档案：李老师不看重代码运行截图 (置信度：FACT)。", "expected_label": "CONTRADICTED"}
-{"case_id": "C_PREF_02", "group": "教师偏好", "fact": "F_FB_08: 评语显示“没有附录原始数据，无法验证真实性，扣10分”。", "claim": "已建立教师偏好档案：极其重视附录原始数据的提供 (证据源：F_FB_08，置信度：HIGH)。", "expected_label": "ENTAILED"}
+{"case_id": "C_PREF_01", "group": "教师偏好", "fact": "上学期的同学说，李老师好像不太看重代码运行截图。", "claim": "已建立教师偏好档案：李老师不看重代码运行截图 (置信度：FACT)。", "expected_label": "UNVERIFIED_AS_FACT"}
+{"case_id": "C_PREF_02", "group": "教师偏好", "fact": "F_FB_08: 评语显示“没有附录原始数据，无法验证真实性，扣10分”。", "claim": "已建立教师偏好档案：极其重视附录原始数据的提供 (证据源：F_FB_08，置信度：HIGH)。", "expected_label": "OVERCLAIM"}
 {"case_id": "C_PREF_03", "group": "教师偏好", "fact": "F_FB_02: 批评了图表坐标轴未标明单位。", "claim": "该老师在所有课程中都极其讨厌图表不标单位（跨课程迁移：True）。", "expected_label": "INSUFFICIENT_EVIDENCE"}
 {"case_id": "C_PREF_04", "group": "教师偏好", "fact": "任务书并未提到文献格式，且无历史证据。", "claim": "根据一般的严格要求，老师一定会检查 APA 7th 格式的标点符号。", "expected_label": "UNVERIFIED_AS_FACT"}
 {"case_id": "C_WORK_01", "group": "工作流冲突", "fact": "F_DIAG_01: 诊断报告指出“作业未包含任何图表，可视化缺失”。", "claim": "规划指令生成了任务：将现有的 3 张图表移到附录中。", "expected_label": "CONTRADICTED"}
-{"case_id": "C_WORK_02", "group": "工作流冲突", "fact": "由于存在隐私约束，无法上传未经脱敏的患者病历原始表格。", "claim": "已将“上传脱敏后的字段说明表及随机抽样的 5 行数据截图”作为平替方案提交。", "expected_label": "ENTAILED"}
+{"case_id": "C_WORK_02", "group": "工作流冲突", "fact": "由于存在隐私约束，无法上传未经脱敏的患者病历原始表格。", "claim": "已将“上传脱敏后的字段说明表及随机抽样的 5 行数据截图”作为平替方案提交。", "expected_label": "INSUFFICIENT_EVIDENCE"}
 {"case_id": "C_WORK_03", "group": "工作流冲突", "fact": "该学生在修改建议中引用了 F_DATA_99，但事实库中不存在该 ID。", "claim": "由于 F_DATA_99 的强烈支撑，必须重构第二章的内容。", "expected_label": "MISATTRIBUTED"}
 {"case_id": "C_WORK_04", "group": "工作流冲突", "fact": "当前作业仅完成了引言部分，尚未开始数据收集。", "claim": "诊断结果表明当前材料不足以进入 /规划 阶段设计详细的数据处理方案。", "expected_label": "ENTAILED"}

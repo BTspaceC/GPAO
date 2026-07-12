@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 import json
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.resolve()
@@ -18,7 +19,7 @@ class TestEvalDatasetSchema(unittest.TestCase):
 
     def test_dataset_exists_and_size(self):
         self.assertTrue(self.cases_file.exists(), "semantic_entailment_cases.jsonl does not exist.")
-        self.assertGreaterEqual(len(self.cases), 16, "Must have at least 16 evaluation cases.")
+        self.assertEqual(len(self.cases), 16, "The frozen corpus must contain exactly 16 cases.")
 
     def test_schema_correctness(self):
         # 导入 schemas 模块进行验证
@@ -44,6 +45,20 @@ class TestEvalDatasetSchema(unittest.TestCase):
             
             # 分组合法性
             self.assertIn(case['group'], EXPECTED_GROUPS, f"Invalid group {case['group']} in {case_id}")
+
+    def test_corpus_preserves_four_cases_per_group(self):
+        import sys
+        sys.path.append(str(EVALS_DIR))
+        from schemas import EXPECTED_GROUPS
+
+        counts = Counter(case['group'] for case in self.cases)
+        self.assertEqual(counts, Counter({group: 4 for group in EXPECTED_GROUPS}))
+
+    def test_known_semantic_regressions_are_labeled_conservatively(self):
+        labels = {case['case_id']: case['expected_label'] for case in self.cases}
+        self.assertEqual(labels['C_PREF_01'], 'UNVERIFIED_AS_FACT')
+        self.assertEqual(labels['C_PREF_02'], 'OVERCLAIM')
+        self.assertEqual(labels['C_WORK_02'], 'INSUFFICIENT_EVIDENCE')
 
 if __name__ == '__main__':
     unittest.main()

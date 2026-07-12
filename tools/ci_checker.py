@@ -10,9 +10,12 @@ import os
 import re
 import sys
 import ast
+import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent.resolve()
+TEXT_GLOBS = ('*.md', '*.py', '*.json', '*.jsonl', '*.yml', '*.yaml')
 
 def check_utf8_and_mojibake(file_path):
     try:
@@ -50,6 +53,44 @@ def check_python_syntax(file_path):
         return False, f"Syntax error: {e}"
     except Exception as e:
         return False, f"Parse error: {e}"
+
+def check_json_syntax(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            if file_path.suffix == '.jsonl':
+                for line_no, line in enumerate(f, 1):
+                    if line.strip():
+                        json.loads(line)
+            else:
+                json.load(f)
+        return True, ""
+    except (json.JSONDecodeError, ValueError) as e:
+        return False, f"Invalid JSON: {e}"
+
+def check_tracked_private_files():
+    """禁止把约定的私有材料或 raw 数据提交到仓库。"""
+    result = subprocess.run(
+        ['git', 'ls-files'],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding='utf-8',
+        check=False,
+    )
+    if result.returncode != 0:
+        return [f"Unable to inspect tracked files: {result.stderr.strip()}"]
+    errors = []
+    private_prefixes = (
+        'private_assignments/', 'user_data/', 'profiles/private/',
+        'evals/raw/', 'evals/raw_outputs/', 'evals/normalized/',
+        'evals/private_reports/',
+    )
+    raw_suffixes = ('.raw.csv', '.raw.xlsx', '.raw.json')
+    for raw_path in result.stdout.splitlines():
+        normalized = raw_path.replace('\\', '/')
+        if normalized.startswith(private_prefixes) or normalized.endswith(raw_suffixes):
+            errors.append(f"Tracked private file: {raw_path}")
+    return errors
 
 def check_markdown_links():
     # 匹配常规的 Markdown 链接 [text](path) 以及代码块/内联代码中的 `path.md`
@@ -93,7 +134,7 @@ def main():
     print("=== GPAO Repository Integrity Check ===")
     has_error = False
     
-    for ext in ['*.md', '*.py']:
+    for ext in TEXT_GLOBS:
         for file_path in ROOT.rglob(ext):
             if '.git' in str(file_path) or 'dist' in str(file_path):
                 continue
@@ -108,10 +149,21 @@ def main():
                 if not ok:
                     print(f"[FAIL] {file_path.relative_to(ROOT)}: {msg}")
                     has_error = True
+            if ext in {'*.json', '*.jsonl'}:
+                ok, msg = check_json_syntax(file_path)
+                if not ok:
+                    print(f"[FAIL] {file_path.relative_to(ROOT)}: {msg}")
+                    has_error = True
                     
     link_errors = check_markdown_links()
     if link_errors:
         for err in link_errors:
+            print(f"[FAIL] {err}")
+        has_error = True
+
+    privacy_errors = check_tracked_private_files()
+    if privacy_errors:
+        for err in privacy_errors:
             print(f"[FAIL] {err}")
         has_error = True
 
