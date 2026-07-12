@@ -1,12 +1,12 @@
 {
   "bundle": "GPAO.bundle.md",
-  "bundle_sha256": "cbeda226d66797618779513c13d35181c939f0977434154d4a7388419cb409c8",
-  "source_set_sha256": "4248bcd9ddd8ef9587820d319f9d636c4467ef39e2e8fbe2d326b4e3dfd2bb1d",
+  "bundle_sha256": "940a9f64b89acf3f655c9516ee1c5bd2c8a2ce70e37363e95df588bac430646e",
+  "source_set_sha256": "b5a1defe740b7e0baff0827454c2aa796cff01dcfaf5349bd08d9a2c57c16562",
   "sources": {
     "SKILL.md": "3bbfdd1170cc3bc25fbf281523d7872b5bab81f009c80292decc980322dd3caa",
     "workflows/plan_assignment.md": "fc677b7ee67e143e41d8690d891034deba3a04af88826f537aa2a02e16f0f520",
-    "workflows/simulate_grading.md": "2095568e938e320619bbbeadddc46521a01ffae15e50511f8c27dff74db3f95e",
-    "workflows/postmortem.md": "a021e7607166b9db9933418ec53a36c8ed276a97425ddde33bee652b692f244e",
+    "workflows/simulate_grading.md": "d2a9556e44c488282953883fa5c61a0e57f2b3a4fe0e72d5cd4cc08737923de9",
+    "workflows/postmortem.md": "a3311d8b620885e02a12e574ba6bedb39db925db1b4d1ea907a6be22c61fc3b4",
     "workflows/profile_teacher.md": "8dbc38acf303edbd685ba70e45c8b2b1f4f00b3a12e1988f1e44b7b054c6879d",
     "workflows/modify_assignment.md": "fba9f1ab2df10cbfac34ffdafd3ac19b92b48f7b77431d7a5d0ab238789b732a",
     "workflows/diagnose_assignment.md": "d23ccfc3383974c6937d84309fadd0333cd64baeaa61aa802e965b4c5415427b",

@@ -3,7 +3,7 @@
 GPAO (Grade Point Alignment Optimizer) Bundle
 本文件由 tools/build_bundle.py 自动生成。请勿手工编辑！
 如需修改，请修改源文件后重新构建。
-Source Set SHA-256: 4248bcd9ddd8ef9587820d319f9d636c4467ef39e2e8fbe2d326b4e3dfd2bb1d
+Source Set SHA-256: b5a1defe740b7e0baff0827454c2aa796cff01dcfaf5349bd08d9a2c57c16562
 ======================================================================
 -->
 
@@ -253,6 +253,8 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 输出候选类型、适配器、识别信号与反信号、识别置信度。模糊或混合类型使用 general/mixed。
 
+若任务书、用户输入或现有 Case State 已明确作业类型，必须加载该类型的对应适配器。附件、rubric、原始数据或完成稿缺失只降低相关审计结论，不得将已知类型降级为 general/mixed；仅当作业类型本身未知或确有跨类型组合时使用 general/mixed。
+
 ### 1. 30 秒可见性启发式检查
 
 只看标题、摘要或项目简介、目录、一级标题、核心图表和结论，回答读者能否快速看见目标、工作量、课程知识、主要结果、可验证亮点和附件索引。
@@ -320,7 +322,7 @@ description: "Evidence-grounded university coursework planning, rubric alignment
 
 ## 处理流程
 
-1. 加载对应适配器；不确定时使用 general。
+1. 加载对应适配器。若任务书、用户输入、旧 Case State 或现有上下文已明确作业类型，必须加载该类型的对应适配器。缺少逐项成绩、提交稿、rubric 或旧状态只降低相关复盘结论，不得将已知类型降级为 general；仅当作业类型本身未知或确有跨类型组合时使用 general。
 2. 区分真实质量问题、评分可见性问题、课程约束和无法归因事项。
 3. 每个归因分别记录 `authority/verification/confidence`；教师未说明的原因不得包装成事实。
    转述教师反馈时保持原有概念粒度：例如“误差来源解释不足”不能擅自窄化成“随机误差不足”或“装置局限”。需要提出具体子类时，只能标为待验证假设，并使用 `verification: evidence_insufficient`。

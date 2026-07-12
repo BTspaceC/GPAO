@@ -27,5 +27,17 @@ class TestWorkflowContracts(unittest.TestCase):
         self.assertIn('实际结果与现有证据是否一致', post_content, "Missing objective criteria in postmortem.")
         self.assertNotIn('得分是否合理', post_content, "Should not use subjective 'reasonable' check.")
 
+    def test_known_assignment_type_is_not_downgraded_for_missing_materials(self):
+        """材料缺失只能局部降级，不能把已知作业类型改路由到 general。"""
+        expected = {
+            'simulate_grading.md': '不得将已知类型降级为 general/mixed',
+            'postmortem.md': '不得将已知类型降级为 general',
+        }
+        for workflow, invariant in expected.items():
+            content = (ROOT / 'workflows' / workflow).read_text(encoding='utf-8')
+            with self.subTest(workflow=workflow):
+                self.assertIn(invariant, content)
+                self.assertIn('作业类型本身未知或确有跨类型组合', content)
+
 if __name__ == '__main__':
     unittest.main()
