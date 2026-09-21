@@ -3,3 +3,22 @@
 {"case_id":"TRIGGER-PRESUBMIT-003","category":"pre_submission_audit","prompt":"报告今晚提交，请检查硬性要求、证据引用和老师能否快速看到我完成的工作。","expected_trigger":true}
 {"case_id":"NO-TRIGGER-WRITING-004","category":"ordinary_writing","prompt":"帮我把这段旅行随笔改得更流畅、更有画面感。","expected_trigger":false}
 {"case_id":"NO-TRIGGER-CHAT-005","category":"casual_chat","prompt":"今天心情不错，你最近有什么有趣的想法？","expected_trigger":false}
+{"case_id":"TRIGGER-QUICK-006","category":"quick_audit","prompt":"课程报告还有一个小时就截止了，快速帮我看一眼最该改哪几处。","expected_trigger":true}
+{"case_id":"TRIGGER-FEEDBACK-007","category":"teacher_feedback","prompt":"老师在我的实验报告上写了“误差分析不充分”，帮我整理一下这位老师看重什么。","expected_trigger":true}
+{"case_id":"TRIGGER-POSTMORTEM-008","category":"postmortem","prompt":"期末大作业成绩出来了只有72分，这是老师的评语和我交的版本，帮我复盘下次怎么改。","expected_trigger":true}
+{"case_id":"TRIGGER-REVISE-009","category":"revise","prompt":"根据刚才的审查结果，帮我对课程论文的结论段做最小修改，先给我预览不要直接改文件。","expected_trigger":true}
+{"case_id":"TRIGGER-ENGLISH-010","category":"english_alias","prompt":"/audit my course project report against the grading rubric before I submit it tomorrow.","expected_trigger":true}
+{"case_id":"TRIGGER-CODEPROJECT-011","category":"programming_coursework","prompt":"这是数据结构课的大作业仓库，老师会按功能、代码质量和文档打分，帮我看看缺什么。","expected_trigger":true}
+{"case_id":"TRIGGER-LABREPORT-012","category":"lab_report","prompt":"大学物理实验报告写完了，帮我检查数据处理和误差分析有没有不符合实验指导书要求的地方。","expected_trigger":true}
+{"case_id":"TRIGGER-PLAN-013","category":"plan","prompt":"刚拿到社会调查课的期末作业任务书和评分表，离截止还有两周，帮我排一下先做什么。","expected_trigger":true}
+{"case_id":"TRIGGER-GHOSTWRITE-014","category":"ghostwriting_boundary","prompt":"帮我直接写一篇3000字的课程论文交给老师，题目是短视频对大学生注意力的影响。","expected_trigger":true}
+{"case_id":"TRIGGER-SLASH-015","category":"chinese_command","prompt":"/诊断 我只有作业题目和一份没写完的草稿，先告诉我现在的状态和下一步。","expected_trigger":true}
+{"case_id":"TRIGGER-VISIBILITY-016","category":"implicit_rubric_alignment","prompt":"我做了很多数据清洗工作但都放在附录里，担心老师看不到，课程论文正文该怎么体现？","expected_trigger":true}
+{"case_id":"NO-TRIGGER-RESUME-017","category":"non_course_writing","prompt":"帮我把这份实习简历的项目经历写得更有说服力一些。","expected_trigger":false}
+{"case_id":"NO-TRIGGER-JOURNAL-018","category":"journal_submission","prompt":"我准备把这篇论文投到期刊，帮我按审稿人的视角润色一下英文摘要。","expected_trigger":false}
+{"case_id":"NO-TRIGGER-TRANSLATE-019","category":"translation","prompt":"把下面这段英文产品说明翻译成中文，保持专业一点。","expected_trigger":false}
+{"case_id":"NO-TRIGGER-CODING-020","category":"general_coding","prompt":"我的 Python 脚本读取 CSV 时报 UnicodeDecodeError，怎么解决？","expected_trigger":false}
+{"case_id":"NO-TRIGGER-MARKETING-021","category":"non_course_writing","prompt":"帮我给新开的奶茶店写一条小红书推广文案。","expected_trigger":false}
+{"case_id":"NO-TRIGGER-KNOWLEDGE-022","category":"knowledge_question","prompt":"卡方检验和 Fisher 精确检验有什么区别，分别在什么时候用？","expected_trigger":false}
+{"case_id":"NO-TRIGGER-EMAIL-023","category":"non_course_writing","prompt":"帮我写一封邮件向导师请假一周，语气礼貌一些。","expected_trigger":false}
+{"case_id":"NO-TRIGGER-STUDY-024","category":"study_plan","prompt":"帮我制定一个三个月备考雅思的学习计划。","expected_trigger":false}

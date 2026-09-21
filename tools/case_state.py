@@ -55,7 +55,9 @@ FIELD_OWNERS = {
     "/诊断": {"stage", "scope", "findings", "open_questions"},
     "/规划": {"rubric_items", "constraints", "findings", "open_questions"},
     "/审计": {"claims", "findings", "open_questions"},
-    "/修改": {"authorization_state", "claims", "findings"},
+    "/速审": {"findings", "open_questions"},
+    # authorization_state is owned by transition_authorization, never by patches.
+    "/修改": {"claims", "findings"},
     "/画像": {"claims"},
     "/复盘": {"claims", "history", "findings"},
 }

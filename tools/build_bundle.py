@@ -19,6 +19,7 @@ BUNDLE_ORDER = [
     'SKILL.md',
     'workflows/plan_assignment.md',
     'workflows/simulate_grading.md',
+    'workflows/quick_audit.md',
     'workflows/postmortem.md',
     'workflows/profile_teacher.md',
     'workflows/modify_assignment.md',
@@ -62,7 +63,7 @@ def render_bundle():
     
     header = f"""<!--
 ======================================================================
-GPAO (Grade Point Alignment Optimizer) Bundle
+GPAO (Grading Preference Alignment Optimizer) Bundle
 本文件由 tools/build_bundle.py 自动生成。请勿手工编辑！
 如需修改，请修改源文件后重新构建。
 Source Set SHA-256: {source_set_sha256}

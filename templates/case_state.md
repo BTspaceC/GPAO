@@ -55,7 +55,8 @@ scope:
 | `/诊断` | `stage`、初始 `scope`、候选类型、初步 `findings`、`open_questions` |
 | `/规划` | `rubric_items`、`constraints`、规划类 `findings`、`open_questions` |
 | `/审计` | 审计类 `claims`、`findings`、`open_questions` |
-| `/修改` | `authorization_state`、修改类 `claims`、修改结果和复审类 `findings` |
+| `/速审` | 快速审查类 `findings`、`open_questions` |
+| `/修改` | 修改类 `claims`、修改结果和复审类 `findings` |
 | `/画像` | 教师偏好命名空间下的 `claims` |
 | `/复盘` | `verification`、`history`、教师偏好迁移候选和复盘类 `findings` |
 
@@ -74,6 +75,8 @@ scope:
 
 ## 修改授权转换
 
+`authorization_state` 不属于任何工作流的补丁可写字段，只能由下列状态机根据用户的真实授权和实际写入结果转换（对应 `tools/case_state.py` 中的 `transition_authorization`）。
+
 ```text
 PREVIEW_ONLY
   --用户明确授权指定文件--> APPLY_APPROVED
@@ -90,6 +93,18 @@ PREVIEW_ONLY
 - `candidate`：至少两个不同课程、至少两条直接证据、非同一模板重复、语义一致、无有效反驳。
 - `confirmed`：满足 `candidate`，并获得用户或人工明确确认。
 - 任务书和 rubric 的要求属于课程约束，禁止登记为教师偏好。
+
+## 课程 AI 使用政策
+
+AI 使用政策作为一条 `constraints` 记录，例如：
+
+```yaml
+constraint_id: "CON_AI_POLICY"
+text: "允许使用 AI 润色语言，但须在文末声明"
+source_ids: ["SRC_002"]
+```
+
+政策未提供时，不登记猜测的政策，改为在 `open_questions` 中追加“AI 使用政策未确认”。
 
 ## 旧 Schema 导入
 
