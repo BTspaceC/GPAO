@@ -1,0 +1,8 @@
+# 仓库内统一使用 LF：Bundle 的 SHA-256 校验和 CI 在 Windows/Linux 上必须一致。
+* text=auto eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
